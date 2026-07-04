@@ -30,7 +30,9 @@
     ]
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "node scripts/dev.cjs",
+    "dev:client": "vite",
+    "dev:server": "node server/index.cjs",
     "build": "vite build",
     "start": "electron .",
     "package": "npm run build && electron-builder",

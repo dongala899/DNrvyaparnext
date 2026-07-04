@@ -1,0 +1,1 @@
+- [Electron app running in Replit browser preview](electron-web-bridge.md) — no display in Replit, so main-process IPC was mirrored as an HTTP bridge for the Vite dev server.

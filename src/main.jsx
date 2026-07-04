@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { bootstrap } from './bootstrap.js';
+import { installBrowserApiShim } from './shared/browser-api.js';
+
+installBrowserApiShim();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
