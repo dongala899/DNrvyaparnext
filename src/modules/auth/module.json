@@ -1,0 +1,26 @@
+{
+  "name": "auth",
+  "version": "1.0.0",
+  "description": "User authentication, session management, password hashing",
+  "dependencies": [],
+  "storagePrefix": "auth_",
+  "channels": {
+    "commands": {
+      "handled": ["auth:login", "auth:logout", "auth:validateSession"],
+      "issued": ["auth:login:failed"]
+    },
+    "events": {
+      "emitted": ["auth:loggedIn", "auth:loggedOut", "auth:sessionExpired"],
+      "subscribed": []
+    }
+  },
+  "routes": [
+    {
+      "path": "/login",
+      "element": "LoginPage",
+      "title": "Login"
+    }
+  ],
+  "menu": null,
+  "migrations": []
+}

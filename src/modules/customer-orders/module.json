@@ -1,0 +1,44 @@
+{
+  "name": "customer-orders",
+  "version": "1.0.0",
+  "description": "Customer purchase order management with line items, auto-numbering, and PDF preview",
+  "dependencies": ["customers", "items"],
+  "storagePrefix": "cust_orders_",
+  "channels": {
+    "commands": {
+      "handled": [
+        "customerOrder:create",
+        "customerOrder:update",
+        "customerOrder:getById",
+        "customerOrder:getList",
+        "customerOrder:delete",
+        "customerOrder:convertToInvoice",
+        "customerOrder:getNextNumber"
+      ],
+      "issued": [
+        "customerOrder:created",
+        "customerOrder:updated",
+        "customerOrder:deleted",
+        "customerOrder:converted"
+      ]
+    },
+    "events": {
+      "emitted": [
+        "customerOrder:created",
+        "customerOrder:updated",
+        "customerOrder:deleted",
+        "customerOrder:converted"
+      ],
+      "subscribed": []
+    }
+  },
+  "routes": [
+    { "path": "/customer-orders", "element": "CustomerOrderListPage", "title": "Customer Orders" },
+    { "path": "/customer-orders/new", "element": "CustomerOrderFormPage", "title": "New Customer Order" },
+    { "path": "/customer-orders/:id", "element": "CustomerOrderDetailPage", "title": "Order Details" },
+    { "path": "/customer-orders/:id/edit", "element": "CustomerOrderFormPage", "title": "Edit Order" },
+    { "path": "/customer-orders/:id/preview", "element": "CustomerOrderPreviewPage", "title": "Order Preview" }
+  ],
+  "menu": { "label": "Customer Orders", "icon": "clipboard-list", "order": 45 },
+  "migrations": []
+}

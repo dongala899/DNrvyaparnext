@@ -1,0 +1,25 @@
+{
+  "name": "items",
+  "version": "1.0.0",
+  "description": "Product/item catalog with SKU, pricing, tax, inventory tracking",
+  "dependencies": [],
+  "storagePrefix": "item_",
+  "channels": {
+    "commands": {
+      "handled": ["item:create", "item:update", "item:delete", "item:getById", "item:getList"],
+      "issued": []
+    },
+    "events": {
+      "emitted": ["item:created", "item:updated", "item:deleted"],
+      "subscribed": []
+    }
+  },
+  "routes": [
+    {"path": "/items", "element": "ItemListPage", "title": "Items"},
+    {"path": "/items/new", "element": "ItemFormPage", "title": "New Item"},
+    {"path": "/items/:id", "element": "ItemDetailPage", "title": "Item Details"},
+    {"path": "/items/:id/edit", "element": "ItemFormPage", "title": "Edit Item"}
+  ],
+  "menu": {"label": "Items", "icon": "package", "order": 30},
+  "migrations": []
+}

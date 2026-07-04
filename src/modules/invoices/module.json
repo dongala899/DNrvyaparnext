@@ -1,0 +1,25 @@
+{
+  "name": "invoices",
+  "version": "1.0.0",
+  "description": "Invoice management with quotation conversion, customer selection, and GST calculations",
+  "dependencies": ["customers", "items", "companies", "quotations"],
+  "storagePrefix": "invoice_",
+  "channels": {
+    "commands": {
+      "handled": ["invoice:create", "invoice:update", "invoice:delete", "invoice:getById", "invoice:getList", "invoice:convertFromQuotation", "invoice:cancel"],
+      "issued": []
+    },
+    "events": {
+      "emitted": ["invoice:created", "invoice:updated", "invoice:deleted", "invoice:cancelled"],
+      "subscribed": []
+    }
+  },
+  "routes": [
+    {"path": "/invoices", "element": "InvoiceListPage", "title": "Invoices"},
+    {"path": "/invoices/new", "element": "InvoiceFormPage", "title": "New Invoice"},
+    {"path": "/invoices/:id", "element": "InvoiceDetailPage", "title": "Invoice Details"},
+    {"path": "/invoices/:id/edit", "element": "InvoiceFormPage", "title": "Edit Invoice"}
+  ],
+  "menu": {"label": "Sales Invoices", "icon": "file-text", "order": 60},
+  "migrations": []
+}

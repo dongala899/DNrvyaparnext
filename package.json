@@ -1,0 +1,62 @@
+{
+  "name": "dnr-vyapar-next",
+  "version": "0.1.0",
+  "description": "DNR Vyapar Next — Modular Monolith Electron App",
+  "author": "DNR Vyapar",
+  "private": true,
+  "main": "electron/main.cjs",
+  "build": {
+    "appId": "com.dnr.vyapar.next",
+    "productName": "DNR Vyapar Next",
+    "copyright": "DNR Vyapar",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "preload.js",
+      "migrations/**/*"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "asar": true,
+    "extraResources": [
+      {
+        "from": "electron/preload.js",
+        "to": "preload.js"
+      }
+    ]
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "electron .",
+    "package": "npm run build && electron-builder",
+    "package:dir": "npm run build && electron-builder --dir",
+    "create-module": "node scripts/create-module.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "pdfkit": "^0.19.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.18.0",
+    "sql.js": "^1.14.1",
+    "zod": "^3.24.0",
+    "zustand": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "electron": "^28.3.3",
+    "electron-builder": "^25.1.8",
+    "vite": "^6.0.0",
+    "vitest": "^4.1.9",
+    "wait-on": "^8.0.0"
+  }
+}

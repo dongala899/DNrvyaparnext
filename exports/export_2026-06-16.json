@@ -1,0 +1,18 @@
+{
+  "companies": {
+    "success": true,
+    "data": []
+  },
+  "customers": {
+    "success": true,
+    "data": []
+  },
+  "items": {
+    "success": true,
+    "data": []
+  },
+  "vendors": {
+    "success": true,
+    "data": []
+  }
+}

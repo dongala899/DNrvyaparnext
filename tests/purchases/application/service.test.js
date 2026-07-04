@@ -1,0 +1,11 @@
+import { describe, it, expect, vi } from 'vitest';
+import { PurchaseService } from '../../../src/modules/purchases/application/service.js';
+
+describe('Purchases Application Service', () => {
+  it('should create service with dependencies', () => {
+    const mockDeps = { storage: { runQuery: vi.fn() }, commandBus: { invoke: vi.fn() }, eventBus: { emit: vi.fn() }, logger: { info: vi.fn() }, sharedState: { getState: vi.fn() } };
+    const service = new PurchaseService(mockDeps);
+    expect(service).toBeDefined();
+    expect(service.store).toBeDefined();
+  });
+});

@@ -1,0 +1,24 @@
+{
+  "name": "payments",
+  "version": "1.0.0",
+  "description": "Payment recording and allocation against invoices",
+  "dependencies": ["invoices", "customers"],
+  "storagePrefix": "payment_",
+  "channels": {
+    "commands": {
+      "handled": ["payment:create", "payment:update", "payment:delete", "payment:getById", "payment:getList", "payment:allocateToInvoice"],
+      "issued": []
+    },
+    "events": {
+      "emitted": ["payment:created", "payment:updated", "payment:deleted", "payment:allocated"],
+      "subscribed": ["invoice:created"]
+    }
+  },
+  "routes": [
+    {"path": "/payments", "element": "PaymentListPage", "title": "Payments"},
+    {"path": "/payments/new", "element": "PaymentFormPage", "title": "New Payment"},
+    {"path": "/payments/:id", "element": "PaymentDetailPage", "title": "Payment Details"}
+  ],
+  "menu": {"label": "Payment Records", "icon": "credit-card", "order": 100},
+  "migrations": []
+}

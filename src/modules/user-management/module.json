@@ -1,0 +1,20 @@
+{
+  "name": "user-management",
+  "version": "1.0.0",
+  "description": "Multi-user roles, permissions, audit log",
+  "dependencies": ["auth"],
+  "storagePrefix": "user_mgmt_",
+  "channels": {
+    "commands": {
+      "handled": ["user:create", "user:update", "user:getById", "user:getList", "user:deactivate", "user:activate"],
+      "issued": []
+    },
+    "events": {
+      "emitted": ["user:created", "user:updated", "user:deactivated"],
+      "subscribed": ["auth:loggedIn"]
+    }
+  },
+  "routes": [],
+  "menu": null,
+  "migrations": []
+}

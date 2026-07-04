@@ -1,0 +1,27 @@
+{
+  "name": "vendor-po",
+  "version": "1.0.0",
+  "description": "Purchase Order and GRN management",
+  "dependencies": ["items", "vendors"],
+  "storagePrefix": "po_",
+  "channels": {
+    "commands": {
+      "handled": ["po:create", "po:update", "po:delete", "po:getById", "po:getList", "po:createGrn", "grn:getList", "grn:getById"],
+      "issued": []
+    },
+    "events": {
+      "emitted": ["po:created", "po:updated", "po:deleted", "grn:created"],
+      "subscribed": []
+    }
+  },
+  "routes": [
+    {"path": "/vendor-po", "element": "PoListPage", "title": "Purchase Orders"},
+    {"path": "/vendor-po/new", "element": "PoFormPage", "title": "New PO"},
+    {"path": "/vendor-po/:id", "element": "PoDetailPage", "title": "PO Details"},
+    {"path": "/vendor-po/:id/edit", "element": "PoFormPage", "title": "Edit PO"},
+    {"path": "/grn", "element": "GrnListPage", "title": "GRN"},
+    {"path": "/grn/new", "element": "GrnFormPage", "title": "New GRN"}
+  ],
+  "menu": {"label": "Purchase Orders", "icon": "shopping-bag", "order": 90},
+  "migrations": []
+}

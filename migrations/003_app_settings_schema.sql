@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS app_settings (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  key TEXT UNIQUE NOT NULL,
+  value TEXT,
+  data_type TEXT DEFAULT 'text',
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_app_settings_key ON app_settings(key);

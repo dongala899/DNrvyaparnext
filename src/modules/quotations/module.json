@@ -1,0 +1,25 @@
+{
+  "name": "quotations",
+  "version": "1.0.0",
+  "description": "Quotation management with line items, customer selection, and GST calculations",
+  "dependencies": ["customers", "items", "companies"],
+  "storagePrefix": "quotation_",
+  "channels": {
+    "commands": {
+      "handled": ["quotation:create", "quotation:update", "quotation:delete", "quotation:getById", "quotation:getList"],
+      "issued": []
+    },
+    "events": {
+      "emitted": ["quotation:created", "quotation:updated", "quotation:deleted"],
+      "subscribed": []
+    }
+  },
+  "routes": [
+    {"path": "/quotations", "element": "QuotationListPage", "title": "Quotations"},
+    {"path": "/quotations/new", "element": "QuotationFormPage", "title": "New Quotation"},
+    {"path": "/quotations/:id", "element": "QuotationDetailPage", "title": "Quotation Details"},
+    {"path": "/quotations/:id/edit", "element": "QuotationFormPage", "title": "Edit Quotation"}
+  ],
+  "menu": {"label": "Sales Quotations", "icon": "file-text", "order": 50},
+  "migrations": []
+}

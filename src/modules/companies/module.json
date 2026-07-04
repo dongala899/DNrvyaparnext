@@ -1,0 +1,26 @@
+{
+  "name": "companies",
+  "version": "1.0.0",
+  "description": "Company profiles, GSTIN, financial years, bank details",
+  "dependencies": ["auth"],
+  "storagePrefix": "company_",
+  "channels": {
+    "commands": {
+      "handled": ["company:create", "company:update", "company:getById", "company:getList", "company:setCurrent", "company:getCurrent"],
+      "issued": []
+    },
+    "events": {
+      "emitted": ["company:created", "company:updated", "company:changed"],
+      "subscribed": ["auth:loggedIn"]
+    }
+  },
+  "routes": [
+    {
+      "path": "/select-company",
+      "element": "CompanySelectPage",
+      "title": "Select Company"
+    }
+  ],
+  "menu": null,
+  "migrations": []
+}

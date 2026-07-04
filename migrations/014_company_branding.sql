@@ -1,0 +1,15 @@
+ALTER TABLE companies ADD COLUMN legal_name TEXT;
+ALTER TABLE companies ADD COLUMN address_line1 TEXT;
+ALTER TABLE companies ADD COLUMN address_line2 TEXT;
+ALTER TABLE companies ADD COLUMN city TEXT;
+ALTER TABLE companies ADD COLUMN state_code TEXT;
+ALTER TABLE companies ADD COLUMN pincode TEXT;
+ALTER TABLE companies ADD COLUMN phone TEXT;
+ALTER TABLE companies ADD COLUMN email TEXT;
+ALTER TABLE companies ADD COLUMN bank_name TEXT;
+ALTER TABLE companies ADD COLUMN bank_account TEXT;
+ALTER TABLE companies ADD COLUMN bank_ifsc TEXT;
+ALTER TABLE companies ADD COLUMN logo_path TEXT;
+ALTER TABLE companies ADD COLUMN signature_path TEXT;
+ALTER TABLE companies ADD COLUMN quotation_prefix TEXT;
+ALTER TABLE companies ADD COLUMN is_active INTEGER DEFAULT 1;

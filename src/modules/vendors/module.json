@@ -1,0 +1,25 @@
+{
+  "name": "vendors",
+  "version": "1.0.0",
+  "description": "Vendor/supplier management with CRUD, search, and filtering",
+  "dependencies": [],
+  "storagePrefix": "vendor_",
+  "channels": {
+    "commands": {
+      "handled": ["vendor:create", "vendor:update", "vendor:delete", "vendor:getById", "vendor:getList"],
+      "issued": []
+    },
+    "events": {
+      "emitted": ["vendor:created", "vendor:updated", "vendor:deleted"],
+      "subscribed": []
+    }
+  },
+  "routes": [
+    {"path": "/vendors", "element": "VendorListPage", "title": "Vendors"},
+    {"path": "/vendors/new", "element": "VendorFormPage", "title": "New Vendor"},
+    {"path": "/vendors/:id", "element": "VendorDetailPage", "title": "Vendor Details"},
+    {"path": "/vendors/:id/edit", "element": "VendorFormPage", "title": "Edit Vendor"}
+  ],
+  "menu": {"label": "Vendors", "icon": "truck", "order": 40},
+  "migrations": []
+}

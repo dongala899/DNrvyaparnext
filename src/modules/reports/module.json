@@ -1,0 +1,26 @@
+{
+  "name": "reports",
+  "version": "1.0.0",
+  "description": "Read-only reporting: GST summaries, ledger, P&L, stock, daybook",
+  "dependencies": ["invoices", "purchases", "items", "customers", "vendors"],
+  "storagePrefix": "report_",
+  "channels": {
+    "commands": {
+      "handled": ["report:getGstr1", "report:getGstr2b", "report:getLedger", "report:getProfitLoss", "report:getStock", "report:getDaybook"],
+      "issued": []
+    },
+    "events": {
+      "emitted": [],
+      "subscribed": []
+    }
+  },
+  "routes": [
+    {"path": "/reports", "element": "ReportListPage", "title": "Reports"},
+    {"path": "/reports/ledger", "element": "LedgerReportPage", "title": "Ledger"},
+    {"path": "/reports/profit-loss", "element": "ProfitLossReportPage", "title": "Profit & Loss"},
+    {"path": "/reports/stock", "element": "StockReportPage", "title": "Stock"},
+    {"path": "/reports/daybook", "element": "DaybookReportPage", "title": "Daybook"}
+  ],
+  "menu": {"label": "Reports", "icon": "bar-chart", "order": 120},
+  "migrations": []
+}

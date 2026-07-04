@@ -1,0 +1,27 @@
+{
+  "name": "settings",
+  "version": "1.0.0",
+  "description": "Application preferences, invoice templates, numbering config",
+  "dependencies": [],
+  "storagePrefix": "settings_",
+  "channels": {
+    "commands": {
+      "handled": ["settings:get", "settings:set", "settings:getAll", "settings:reset"],
+      "issued": []
+    },
+    "events": {
+      "emitted": ["settings:changed"],
+      "subscribed": []
+    }
+  },
+  "routes": [
+    { "path": "/settings", "component": "SettingsPage", "title": "Settings" }
+  ],
+  "menu": {
+    "label": "Settings",
+    "icon": "gear",
+    "order": 90,
+    "parent": null
+  },
+  "migrations": []
+}

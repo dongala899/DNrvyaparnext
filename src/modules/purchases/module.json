@@ -1,0 +1,24 @@
+{
+  "name": "purchases",
+  "version": "1.0.0",
+  "description": "Purchase bill management with vendor selection and GRN linking",
+  "dependencies": ["items", "vendors", "companies", "vendor-po"],
+  "storagePrefix": "purchase_",
+  "channels": {
+    "commands": {
+      "handled": ["purchase:create", "purchase:update", "purchase:delete", "purchase:getById", "purchase:getList", "purchase:createFromGrn", "vendorPayment:create", "vendorPayment:getList"],
+      "issued": []
+    },
+    "events": {
+      "emitted": ["purchase:created", "purchase:updated", "purchase:deleted", "vendorPayment:created"],
+      "subscribed": ["grn:created"]
+    }
+  },
+  "routes": [
+    {"path": "/purchases", "element": "PurchaseListPage", "title": "Purchases"},
+    {"path": "/purchases/new", "element": "PurchaseFormPage", "title": "New Purchase"},
+    {"path": "/purchases/:id", "element": "PurchaseDetailPage", "title": "Purchase Details"}
+  ],
+  "menu": {"label": "Purchase Bills", "icon": "shopping-bag", "order": 110},
+  "migrations": []
+}

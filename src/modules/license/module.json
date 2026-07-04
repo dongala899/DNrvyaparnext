@@ -1,0 +1,20 @@
+{
+  "name": "license",
+  "version": "1.0.0",
+  "description": "License validation, trial management, feature flags",
+  "dependencies": [],
+  "storagePrefix": "license_",
+  "channels": {
+    "commands": {
+      "handled": ["license:validate", "license:activate", "license:getStatus"],
+      "issued": ["license:validation:failed"]
+    },
+    "events": {
+      "emitted": ["license:activated", "license:expired", "license:trialWarning"],
+      "subscribed": []
+    }
+  },
+  "routes": [],
+  "menu": null,
+  "migrations": []
+}

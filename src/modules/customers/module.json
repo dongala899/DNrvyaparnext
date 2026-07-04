@@ -1,0 +1,45 @@
+{
+  "name": "customers",
+  "version": "1.0.0",
+  "description": "Customer management with CRUD, search, and filtering",
+  "dependencies": [],
+  "storagePrefix": "customer_",
+  "channels": {
+    "commands": {
+      "handled": ["customer:create", "customer:update", "customer:delete", "customer:getById", "customer:getList"],
+      "issued": []
+    },
+    "events": {
+      "emitted": ["customer:created", "customer:updated", "customer:deleted"],
+      "subscribed": []
+    }
+  },
+  "routes": [
+    {
+      "path": "/customers",
+      "element": "CustomerListPage",
+      "title": "Customers"
+    },
+    {
+      "path": "/customers/new",
+      "element": "CustomerFormPage",
+      "title": "New Customer"
+    },
+    {
+      "path": "/customers/:id",
+      "element": "CustomerDetailPage",
+      "title": "Customer Details"
+    },
+    {
+      "path": "/customers/:id/edit",
+      "element": "CustomerFormPage",
+      "title": "Edit Customer"
+    }
+  ],
+  "menu": {
+    "label": "Customers",
+    "icon": "users",
+    "order": 20
+  },
+  "migrations": []
+}

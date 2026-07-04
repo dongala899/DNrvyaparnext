@@ -1,0 +1,20 @@
+{
+  "name": "backup-restore",
+  "version": "1.0.0",
+  "description": "Database backup, restore, export/import, and old app migration",
+  "dependencies": [],
+  "storagePrefix": "backup_",
+  "channels": {
+    "commands": {
+      "handled": ["backup:create", "backup:restore", "backup:exportJson", "backup:importJson", "migration:runOldApp"],
+      "issued": []
+    },
+    "events": {
+      "emitted": ["backup:created", "backup:restored", "backup:exported", "backup:imported", "migration:completed", "migration:failed"],
+      "subscribed": []
+    }
+  },
+  "routes": [],
+  "menu": {"label": "Backup & Restore", "icon": "database", "order": 200},
+  "migrations": []
+}

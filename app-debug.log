@@ -1,0 +1,686 @@
+[2026-06-29T17:26:11.334Z] === APP STARTING ===
+[2026-06-29T17:26:11.416Z] whenReady callback registered
+[2026-06-29T17:26:12.201Z] App ready event fired
+[2026-06-29T17:26:12.377Z] [Main] Initializing database...
+[2026-06-29T17:26:16.766Z] [Main] Database initialized
+[2026-06-29T17:26:17.708Z] [Main] Migrations complete: 0 applied
+[2026-06-29T17:26:17.735Z] [Main] Database ready
+[2026-06-29T17:26:17.760Z] Database initialized, registering IPC handlers
+[2026-06-29T17:26:17.827Z] IPC handlers registered, creating window
+[2026-06-29T17:26:17.950Z] [Main] Preload path: D:\DNR Vyapar Next\dist-electron\win-unpacked\resources\preload.js
+[2026-06-29T17:26:18.438Z] [Main] __dirname: D:\DNR Vyapar Next\dist-electron\win-unpacked\resources\app.asar\electron
+[2026-06-29T17:26:18.495Z] [Main] resourcesPath: D:\DNR Vyapar Next\dist-electron\win-unpacked\resources
+[2026-06-29T17:26:18.572Z] [Main] app.getAppPath(): D:\DNR Vyapar Next\dist-electron\win-unpacked\resources\app.asar
+[2026-06-29T17:26:37.279Z] Window created, visible=true
+[2026-06-29T17:26:40.993Z] [Renderer INFO] [Preload] Starting preload script...
+[2026-06-29T17:26:40.995Z] [Renderer INFO] [Preload] Exposing window.api with keys: storage,dialog,print,license,data,branding,auth,window
+[2026-06-29T17:26:41.276Z] [Renderer INFO] [Bootstrap] Starting renderer initialization...
+[2026-06-29T17:26:41.278Z] [Renderer INFO] [Bootstrap] Initializing shared state...
+[2026-06-29T17:26:41.280Z] [Renderer INFO] [Bootstrap]   ✓ Shared state ready
+[2026-06-29T17:26:41.282Z] [Renderer INFO] [Bootstrap] Initializing core services...
+[2026-06-29T17:26:41.284Z] [Renderer INFO] [Bootstrap]   ✓ Storage adapter ready
+[2026-06-29T17:26:41.286Z] [Renderer INFO] [Bootstrap]   ✓ Logger adapter ready
+[2026-06-29T17:26:41.288Z] [Renderer INFO] [Bootstrap]   ✓ Company context adapter ready
+[2026-06-29T17:26:41.290Z] [Renderer INFO] [Bootstrap]   ✓ Permissions service ready
+[2026-06-29T17:26:41.292Z] [Renderer INFO] [Bootstrap]   ✓ Numbering service ready
+[2026-06-29T17:26:41.293Z] [Renderer INFO] [Bootstrap]   ✓ Tax service ready
+[2026-06-29T17:26:41.295Z] [Renderer INFO] [Bootstrap] Initializing shell services...
+[2026-06-29T17:26:41.297Z] [Renderer INFO] [Bootstrap]   ✓ Command bus ready
+[2026-06-29T17:26:41.298Z] [Renderer INFO] [Bootstrap]   ✓ Event bus ready
+[2026-06-29T17:26:41.300Z] [Renderer INFO] [Bootstrap]   ✓ Router ready
+[2026-06-29T17:26:41.302Z] [Renderer INFO] [Bootstrap] Discovering modules...
+[2026-06-29T17:26:41.343Z] [Renderer INFO] [Bootstrap]   Found 17 module(s): auth, backup-restore, companies, customer-pos, customers, invoices, items, license, payments, preview-print, purchases, quotations, reports, settings, user-management, vendor-po, vendors
+[2026-06-29T17:26:41.350Z] [Renderer INFO] [Bootstrap] Loading modules...
+[2026-06-29T17:26:41.352Z] [Renderer INFO] [Lifecycle] Loading module: auth
+[2026-06-29T17:26:41.355Z] [Main] Page finished loading
+[2026-06-29T17:26:41.366Z] [Main] Page title: DNR Vyapar Next
+[2026-06-29T17:26:41.381Z] [Renderer INFO] [core] [auth] Module initialized
+[2026-06-29T17:26:41.395Z] [Renderer INFO] [Lifecycle]   ✓ auth loaded
+[2026-06-29T17:26:41.397Z] [Renderer INFO] [Lifecycle] Loading module: backup-restore
+[2026-06-29T17:26:41.410Z] [Renderer INFO] [core] [backup-restore] Module initialized
+[2026-06-29T17:26:41.418Z] [Renderer INFO] [Lifecycle]   ✓ backup-restore loaded
+[2026-06-29T17:26:41.420Z] [Renderer INFO] [Lifecycle] Loading module: companies
+[2026-06-29T17:26:41.466Z] [Renderer INFO] [core] [companies] Module initialized
+[2026-06-29T17:26:41.468Z] [Renderer INFO] [Lifecycle]   ✓ companies loaded
+[2026-06-29T17:26:41.470Z] [Renderer INFO] [Lifecycle] Loading module: items
+[2026-06-29T17:26:41.479Z] [Renderer INFO] [core] [items] Module initialized
+[2026-06-29T17:26:41.481Z] [Renderer INFO] [Lifecycle]   ✓ items loaded
+[2026-06-29T17:26:41.483Z] [Renderer INFO] [Lifecycle] Loading module: customers
+[2026-06-29T17:26:41.489Z] [Renderer INFO] [core] [customers] Module initialized
+[2026-06-29T17:26:41.492Z] [Renderer INFO] [Lifecycle]   ✓ customers loaded
+[2026-06-29T17:26:41.494Z] [Renderer INFO] [Lifecycle] Loading module: quotations
+[2026-06-29T17:26:41.498Z] [Renderer INFO] [core] [quotations] Module initialized
+[2026-06-29T17:26:41.500Z] [Renderer INFO] [Lifecycle]   ✓ quotations loaded
+[2026-06-29T17:26:41.502Z] [Renderer INFO] [Lifecycle] Loading module: invoices
+[2026-06-29T17:26:41.509Z] [Renderer INFO] [core] [invoices] Module initialized
+[2026-06-29T17:26:41.511Z] [Renderer INFO] [Lifecycle]   ✓ invoices loaded
+[2026-06-29T17:26:41.512Z] [Renderer INFO] [Lifecycle] Loading module: customer-pos
+[2026-06-29T17:26:41.525Z] [Renderer INFO] [core] [customer-pos] Module initialized
+[2026-06-29T17:26:41.527Z] [Renderer INFO] [Lifecycle]   ✓ customer-pos loaded
+[2026-06-29T17:26:41.540Z] [Renderer INFO] [Lifecycle] Loading module: license
+[2026-06-29T17:26:41.542Z] [Renderer INFO] [core] Checking license status
+[2026-06-29T17:26:41.556Z] [Renderer INFO] [core] [license] Module initialized
+[2026-06-29T17:26:41.558Z] [Renderer INFO] [Lifecycle]   ✓ license loaded
+[2026-06-29T17:26:41.560Z] [Renderer INFO] [Lifecycle] Loading module: payments
+[2026-06-29T17:26:41.573Z] [Renderer INFO] [core] [payments] Module initialized
+[2026-06-29T17:26:41.574Z] [Renderer INFO] [Lifecycle]   ✓ payments loaded
+[2026-06-29T17:26:41.588Z] [Renderer INFO] [Lifecycle] Loading module: preview-print
+[2026-06-29T17:26:41.596Z] [Renderer INFO] [core] [preview-print] Module initialized
+[2026-06-29T17:26:41.598Z] [Renderer INFO] [Lifecycle]   ✓ preview-print loaded
+[2026-06-29T17:26:41.600Z] [Renderer INFO] [Lifecycle] Loading module: vendors
+[2026-06-29T17:26:41.609Z] [Renderer INFO] [core] [vendors] Module initialized
+[2026-06-29T17:26:41.615Z] [Renderer INFO] [Lifecycle]   ✓ vendors loaded
+[2026-06-29T17:26:41.616Z] [Renderer INFO] [Lifecycle] Loading module: vendor-po
+[2026-06-29T17:26:41.619Z] [Renderer INFO] [core] [vendor-po] Module initialized
+[2026-06-29T17:26:41.621Z] [Renderer INFO] [Lifecycle]   ✓ vendor-po loaded
+[2026-06-29T17:26:41.623Z] [Renderer INFO] [Lifecycle] Loading module: purchases
+[2026-06-29T17:26:41.625Z] [Renderer INFO] [core] [purchases] Module initialized
+[2026-06-29T17:26:41.627Z] [Renderer INFO] [Lifecycle]   ✓ purchases loaded
+[2026-06-29T17:26:41.629Z] [Renderer INFO] [Lifecycle] Loading module: reports
+[2026-06-29T17:26:41.641Z] [Renderer INFO] [core] [reports] Module initialized
+[2026-06-29T17:26:41.643Z] [Renderer INFO] [Lifecycle]   ✓ reports loaded
+[2026-06-29T17:26:41.645Z] [Renderer INFO] [Lifecycle] Loading module: settings
+[2026-06-29T17:26:41.656Z] [Renderer INFO] [core] [settings] Module initialized
+[2026-06-29T17:26:41.658Z] [Renderer INFO] [Lifecycle]   ✓ settings loaded
+[2026-06-29T17:26:41.660Z] [Renderer INFO] [Lifecycle] Loading module: user-management
+[2026-06-29T17:26:41.666Z] [Renderer INFO] [core] [user-management] Module initialized
+[2026-06-29T17:26:41.693Z] [Renderer INFO] [Lifecycle]   ✓ user-management loaded
+[2026-06-29T17:26:41.704Z] [Renderer INFO] [Bootstrap]   All modules loaded
+[2026-06-29T17:26:41.706Z] [Renderer INFO] [Bootstrap] Building router...
+[2026-06-29T17:26:41.755Z] [Renderer INFO] [Bootstrap]   ✓ Router ready with 44 module route(s)
+[2026-06-29T17:26:41.818Z] [Renderer INFO] [Bootstrap] Initialization complete
+[2026-06-29T17:26:41.861Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:00.942Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:00.986Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:01.266Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:01.269Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:01.374Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:01.962Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:02.291Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:02.665Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:02.834Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:03.032Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:03.334Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:03.553Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:03.824Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:06.428Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:14.890Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:37.855Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:41.396Z] [Renderer INFO] [Preload] Starting preload script...
+[2026-06-29T17:27:41.418Z] [Renderer INFO] [Preload] Exposing window.api with keys: storage,dialog,print,license,data,branding,auth,window
+[2026-06-29T17:27:41.947Z] [Renderer INFO] [Bootstrap] Starting renderer initialization...
+[2026-06-29T17:27:41.949Z] [Renderer INFO] [Bootstrap] Initializing shared state...
+[2026-06-29T17:27:41.952Z] [Renderer INFO] [Bootstrap]   ✓ Shared state ready
+[2026-06-29T17:27:41.954Z] [Renderer INFO] [Bootstrap] Initializing core services...
+[2026-06-29T17:27:41.956Z] [Renderer INFO] [Bootstrap]   ✓ Storage adapter ready
+[2026-06-29T17:27:41.958Z] [Renderer INFO] [Bootstrap]   ✓ Logger adapter ready
+[2026-06-29T17:27:41.961Z] [Renderer INFO] [Bootstrap]   ✓ Company context adapter ready
+[2026-06-29T17:27:41.963Z] [Renderer INFO] [Bootstrap]   ✓ Permissions service ready
+[2026-06-29T17:27:41.966Z] [Renderer INFO] [Bootstrap]   ✓ Numbering service ready
+[2026-06-29T17:27:41.968Z] [Renderer INFO] [Bootstrap]   ✓ Tax service ready
+[2026-06-29T17:27:41.969Z] [Renderer INFO] [Bootstrap] Initializing shell services...
+[2026-06-29T17:27:41.971Z] [Renderer INFO] [Bootstrap]   ✓ Command bus ready
+[2026-06-29T17:27:41.973Z] [Renderer INFO] [Bootstrap]   ✓ Event bus ready
+[2026-06-29T17:27:41.975Z] [Renderer INFO] [Bootstrap]   ✓ Router ready
+[2026-06-29T17:27:41.988Z] [Renderer INFO] [Bootstrap] Discovering modules...
+[2026-06-29T17:27:41.990Z] [Renderer INFO] [Bootstrap]   Found 17 module(s): auth, backup-restore, companies, customer-pos, customers, invoices, items, license, payments, preview-print, purchases, quotations, reports, settings, user-management, vendor-po, vendors
+[2026-06-29T17:27:41.992Z] [Renderer INFO] [Bootstrap] Loading modules...
+[2026-06-29T17:27:41.995Z] [Renderer INFO] [Lifecycle] Loading module: auth
+[2026-06-29T17:27:41.997Z] [Main] Page finished loading
+[2026-06-29T17:27:42.005Z] [Main] Page title: DNR Vyapar Next
+[2026-06-29T17:27:42.021Z] [Renderer INFO] [core] [auth] Module initialized
+[2026-06-29T17:27:42.023Z] [Renderer INFO] [Lifecycle]   ✓ auth loaded
+[2026-06-29T17:27:42.026Z] [Renderer INFO] [Lifecycle] Loading module: backup-restore
+[2026-06-29T17:27:42.047Z] [Renderer INFO] [core] [backup-restore] Module initialized
+[2026-06-29T17:27:42.050Z] [Renderer INFO] [Lifecycle]   ✓ backup-restore loaded
+[2026-06-29T17:27:42.053Z] [Renderer INFO] [Lifecycle] Loading module: companies
+[2026-06-29T17:27:42.060Z] [Renderer INFO] [core] [companies] Module initialized
+[2026-06-29T17:27:42.062Z] [Renderer INFO] [Lifecycle]   ✓ companies loaded
+[2026-06-29T17:27:42.064Z] [Renderer INFO] [Lifecycle] Loading module: items
+[2026-06-29T17:27:42.066Z] [Renderer INFO] [core] [items] Module initialized
+[2026-06-29T17:27:42.068Z] [Renderer INFO] [Lifecycle]   ✓ items loaded
+[2026-06-29T17:27:42.071Z] [Renderer INFO] [Lifecycle] Loading module: customers
+[2026-06-29T17:27:42.072Z] [Renderer INFO] [core] [customers] Module initialized
+[2026-06-29T17:27:42.074Z] [Renderer INFO] [Lifecycle]   ✓ customers loaded
+[2026-06-29T17:27:42.076Z] [Renderer INFO] [Lifecycle] Loading module: quotations
+[2026-06-29T17:27:42.078Z] [Renderer INFO] [core] [quotations] Module initialized
+[2026-06-29T17:27:42.080Z] [Renderer INFO] [Lifecycle]   ✓ quotations loaded
+[2026-06-29T17:27:42.082Z] [Renderer INFO] [Lifecycle] Loading module: invoices
+[2026-06-29T17:27:42.085Z] [Renderer INFO] [core] [invoices] Module initialized
+[2026-06-29T17:27:42.087Z] [Renderer INFO] [Lifecycle]   ✓ invoices loaded
+[2026-06-29T17:27:42.090Z] [Renderer INFO] [Lifecycle] Loading module: customer-pos
+[2026-06-29T17:27:42.092Z] [Renderer INFO] [core] [customer-pos] Module initialized
+[2026-06-29T17:27:42.095Z] [Renderer INFO] [Lifecycle]   ✓ customer-pos loaded
+[2026-06-29T17:27:42.097Z] [Renderer INFO] [Lifecycle] Loading module: license
+[2026-06-29T17:27:42.099Z] [Renderer INFO] [core] Checking license status
+[2026-06-29T17:27:42.103Z] [Renderer INFO] [core] [license] Module initialized
+[2026-06-29T17:27:42.105Z] [Renderer INFO] [Lifecycle]   ✓ license loaded
+[2026-06-29T17:27:42.107Z] [Renderer INFO] [Lifecycle] Loading module: payments
+[2026-06-29T17:27:42.108Z] [Renderer INFO] [core] [payments] Module initialized
+[2026-06-29T17:27:42.110Z] [Renderer INFO] [Lifecycle]   ✓ payments loaded
+[2026-06-29T17:27:42.112Z] [Renderer INFO] [Lifecycle] Loading module: preview-print
+[2026-06-29T17:27:42.114Z] [Renderer INFO] [core] [preview-print] Module initialized
+[2026-06-29T17:27:42.115Z] [Renderer INFO] [Lifecycle]   ✓ preview-print loaded
+[2026-06-29T17:27:42.118Z] [Renderer INFO] [Lifecycle] Loading module: vendors
+[2026-06-29T17:27:42.120Z] [Renderer INFO] [core] [vendors] Module initialized
+[2026-06-29T17:27:42.122Z] [Renderer INFO] [Lifecycle]   ✓ vendors loaded
+[2026-06-29T17:27:42.124Z] [Renderer INFO] [Lifecycle] Loading module: vendor-po
+[2026-06-29T17:27:42.126Z] [Renderer INFO] [core] [vendor-po] Module initialized
+[2026-06-29T17:27:42.128Z] [Renderer INFO] [Lifecycle]   ✓ vendor-po loaded
+[2026-06-29T17:27:42.130Z] [Renderer INFO] [Lifecycle] Loading module: purchases
+[2026-06-29T17:27:42.132Z] [Renderer INFO] [core] [purchases] Module initialized
+[2026-06-29T17:27:42.134Z] [Renderer INFO] [Lifecycle]   ✓ purchases loaded
+[2026-06-29T17:27:42.136Z] [Renderer INFO] [Lifecycle] Loading module: reports
+[2026-06-29T17:27:42.138Z] [Renderer INFO] [core] [reports] Module initialized
+[2026-06-29T17:27:42.140Z] [Renderer INFO] [Lifecycle]   ✓ reports loaded
+[2026-06-29T17:27:42.143Z] [Renderer INFO] [Lifecycle] Loading module: settings
+[2026-06-29T17:27:42.148Z] [Renderer INFO] [core] [settings] Module initialized
+[2026-06-29T17:27:42.150Z] [Renderer INFO] [Lifecycle]   ✓ settings loaded
+[2026-06-29T17:27:42.152Z] [Renderer INFO] [Lifecycle] Loading module: user-management
+[2026-06-29T17:27:42.156Z] [Renderer INFO] [core] [user-management] Module initialized
+[2026-06-29T17:27:42.158Z] [Renderer INFO] [Lifecycle]   ✓ user-management loaded
+[2026-06-29T17:27:42.160Z] [Renderer INFO] [Bootstrap]   All modules loaded
+[2026-06-29T17:27:42.162Z] [Renderer INFO] [Bootstrap] Building router...
+[2026-06-29T17:27:42.170Z] [Renderer INFO] [Bootstrap]   ✓ Router ready with 44 module route(s)
+[2026-06-29T17:27:42.172Z] [Renderer INFO] [Bootstrap] Initialization complete
+[2026-06-29T17:27:42.184Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:51.057Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:51.581Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:51.903Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:52.064Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:52.270Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:53.495Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:53.948Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:54.141Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:54.297Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:54.471Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:54.768Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:54.971Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:55.260Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:27:57.318Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:28:27.982Z] [Renderer INFO] [LoginPage] Rendering...
+[2026-06-29T17:31:50.349Z] === APP STARTING ===
+[2026-06-29T17:31:50.418Z] whenReady callback registered
+[2026-06-29T17:31:50.580Z] App ready event fired
+[2026-06-29T17:31:50.582Z] [Main] Initializing database...
+[2026-06-29T17:31:50.680Z] [Main] Database initialized
+[2026-06-29T17:31:50.850Z] [Main] Migrations complete: 0 applied
+[2026-06-29T17:31:54.824Z] [Main] Database ready
+[2026-06-29T17:31:54.826Z] Database initialized, registering IPC handlers
+[2026-06-29T17:31:54.829Z] IPC handlers registered, creating window
+[2026-06-29T17:31:54.831Z] [Main] Preload path: D:\DNR Vyapar Next\dist-electron\win-unpacked\resources\preload.js
+[2026-06-29T17:31:54.833Z] [Main] __dirname: D:\DNR Vyapar Next\dist-electron\win-unpacked\resources\app.asar\electron
+[2026-06-29T17:31:54.835Z] [Main] resourcesPath: D:\DNR Vyapar Next\dist-electron\win-unpacked\resources
+[2026-06-29T17:31:54.836Z] [Main] app.getAppPath(): D:\DNR Vyapar Next\dist-electron\win-unpacked\resources\app.asar
+[2026-06-29T17:31:55.140Z] Window created, visible=true
+[2026-06-29T17:37:59.687Z] === APP STARTING ===
+[2026-06-29T17:37:59.704Z] whenReady callback registered
+[2026-06-29T17:37:59.866Z] App ready event fired
+[2026-06-29T17:37:59.868Z] [Main] Initializing database...
+[2026-06-29T17:37:59.951Z] [Main] Database initialized
+[2026-06-29T17:38:00.159Z] [Main] Migrations complete: 0 applied
+[2026-06-29T17:38:04.088Z] [Main] Database ready
+[2026-06-29T17:38:04.090Z] Database initialized, registering IPC handlers
+[2026-06-29T17:38:04.094Z] IPC handlers registered, creating window
+[2026-06-29T17:38:04.096Z] [Main] Preload path: D:\DNR Vyapar Next\dist-electron\win-unpacked\resources\preload.js
+[2026-06-29T17:38:04.097Z] [Main] __dirname: D:\DNR Vyapar Next\dist-electron\win-unpacked\resources\app.asar\electron
+[2026-06-29T17:38:04.099Z] [Main] resourcesPath: D:\DNR Vyapar Next\dist-electron\win-unpacked\resources
+[2026-06-29T17:38:04.101Z] [Main] app.getAppPath(): D:\DNR Vyapar Next\dist-electron\win-unpacked\resources\app.asar
+[2026-06-29T17:38:04.497Z] Window created, visible=true
+[2026-06-30T02:32:16.598Z] === APP STARTING ===
+[2026-06-30T02:33:19.106Z] === APP STARTING ===
+[2026-06-30T02:34:24.480Z] === APP STARTING ===
+[2026-06-30T02:36:15.709Z] === APP STARTING ===
+[2026-06-30T02:38:01.059Z] === APP STARTING ===
+[2026-06-30T02:38:33.089Z] === APP STARTING ===
+[2026-06-30T02:38:50.970Z] === APP STARTING ===
+[2026-06-30T02:44:39.806Z] === APP STARTING ===
+[2026-06-30T02:50:05.529Z] === APP STARTING ===
+[2026-06-30T02:50:05.565Z] whenReady callback registered
+[2026-06-30T02:50:07.716Z] App ready event fired
+[2026-06-30T02:50:07.718Z] [Main] Initializing database...
+[2026-06-30T02:50:28.386Z] === APP STARTING ===
+[2026-06-30T02:50:28.486Z] whenReady callback registered
+[2026-06-30T02:50:28.569Z] App ready event fired
+[2026-06-30T02:50:28.571Z] [Main] Initializing database...
+[2026-06-30T02:50:31.131Z] [Main] Database initialized
+[2026-06-30T02:50:31.802Z] [Main] Migrations complete: 0 applied
+[2026-06-30T02:50:31.851Z] [Main] Database ready
+[2026-06-30T02:50:31.853Z] Database initialized, registering IPC handlers
+[2026-06-30T02:50:31.857Z] IPC handlers registered, creating window
+[2026-06-30T02:50:31.859Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T02:50:31.861Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T02:50:31.865Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T02:50:31.867Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T02:50:38.570Z] Window created, visible=true
+[2026-06-30T02:51:56.971Z] === APP STARTING ===
+[2026-06-30T02:51:56.979Z] whenReady callback registered
+[2026-06-30T02:51:57.181Z] App ready event fired
+[2026-06-30T02:51:57.183Z] [Main] Initializing database...
+[2026-06-30T02:51:57.263Z] [Main] Database initialized
+[2026-06-30T02:51:57.329Z] [Main] Migrations complete: 0 applied
+[2026-06-30T02:51:57.390Z] [Main] Database ready
+[2026-06-30T02:51:57.391Z] Database initialized, registering IPC handlers
+[2026-06-30T02:51:57.394Z] IPC handlers registered, creating window
+[2026-06-30T02:51:57.396Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T02:51:57.398Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T02:51:57.399Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T02:51:57.401Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T02:51:57.661Z] Window created, visible=true
+[2026-06-30T02:53:34.419Z] All windows closed, platform=win32
+[2026-06-30T02:53:34.465Z] Quitting app
+[2026-06-30T02:53:46.950Z] [Main] Render process gone: {"reason":"crashed","exitCode":-1}
+[2026-06-30T02:55:36.079Z] All windows closed, platform=win32
+[2026-06-30T02:55:36.382Z] Quitting app
+[2026-06-30T03:01:48.025Z] === APP STARTING ===
+[2026-06-30T03:01:48.035Z] whenReady callback registered
+[2026-06-30T03:01:48.116Z] App ready event fired
+[2026-06-30T03:01:48.119Z] [Main] Initializing database...
+[2026-06-30T03:01:48.337Z] [Main] Database initialized
+[2026-06-30T03:01:48.452Z] [Main] Migrations complete: 0 applied
+[2026-06-30T03:01:48.455Z] [Main] Database ready
+[2026-06-30T03:01:48.456Z] Database initialized, registering IPC handlers
+[2026-06-30T03:01:48.459Z] IPC handlers registered, creating window
+[2026-06-30T03:01:48.462Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T03:01:48.463Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T03:01:48.465Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T03:01:48.467Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T03:01:48.622Z] Window created, visible=true
+[2026-06-30T03:05:37.294Z] === APP STARTING ===
+[2026-06-30T03:05:37.565Z] whenReady callback registered
+[2026-06-30T03:05:38.034Z] App ready event fired
+[2026-06-30T03:05:38.166Z] [Main] Initializing database...
+[2026-06-30T03:05:38.301Z] [Main] Database initialized
+[2026-06-30T03:05:38.408Z] [Main] Migrations complete: 0 applied
+[2026-06-30T03:05:38.539Z] [Main] Database ready
+[2026-06-30T03:05:38.541Z] Database initialized, registering IPC handlers
+[2026-06-30T03:05:38.543Z] IPC handlers registered, creating window
+[2026-06-30T03:05:38.545Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T03:05:38.547Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T03:05:38.548Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T03:05:38.549Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T03:05:38.704Z] Window created, visible=true
+[2026-06-30T03:14:44.643Z] [Main] Page failed to load: -102 - ERR_CONNECTION_REFUSED
+[2026-06-30T03:15:08.521Z] All windows closed, platform=win32
+[2026-06-30T03:15:08.523Z] Quitting app
+[2026-06-30T03:19:21.748Z] === APP STARTING ===
+[2026-06-30T03:19:21.758Z] whenReady callback registered
+[2026-06-30T03:19:21.988Z] App ready event fired
+[2026-06-30T03:19:21.991Z] [Main] Initializing database...
+[2026-06-30T03:19:22.070Z] [Main] Database initialized
+[2026-06-30T03:19:22.273Z] [Main] Migrations complete: 0 applied
+[2026-06-30T03:19:22.276Z] [Main] Database ready
+[2026-06-30T03:19:22.278Z] Database initialized, registering IPC handlers
+[2026-06-30T03:19:22.281Z] IPC handlers registered, creating window
+[2026-06-30T03:19:22.283Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T03:19:22.285Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T03:19:22.287Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T03:19:22.288Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T03:19:22.400Z] Window created, visible=true
+[2026-06-30T03:28:42.012Z] === APP STARTING ===
+[2026-06-30T03:28:42.030Z] whenReady callback registered
+[2026-06-30T03:28:42.222Z] App ready event fired
+[2026-06-30T03:28:42.225Z] [Main] Initializing database...
+[2026-06-30T03:28:42.310Z] [Main] Database initialized
+[2026-06-30T03:28:42.522Z] [Main] Migrations complete: 0 applied
+[2026-06-30T03:28:42.526Z] [Main] Database ready
+[2026-06-30T03:28:42.528Z] Database initialized, registering IPC handlers
+[2026-06-30T03:28:42.531Z] IPC handlers registered, creating window
+[2026-06-30T03:28:42.534Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T03:28:42.535Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T03:28:42.537Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T03:28:42.540Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T03:28:42.685Z] Window created, visible=true
+[2026-06-30T03:33:00.542Z] === APP STARTING ===
+[2026-06-30T03:33:00.552Z] whenReady callback registered
+[2026-06-30T03:33:00.741Z] App ready event fired
+[2026-06-30T03:33:00.744Z] [Main] Initializing database...
+[2026-06-30T03:33:00.827Z] [Main] Database initialized
+[2026-06-30T03:33:00.891Z] [Main] Migrations complete: 0 applied
+[2026-06-30T03:33:00.893Z] [Main] Database ready
+[2026-06-30T03:33:00.895Z] Database initialized, registering IPC handlers
+[2026-06-30T03:33:00.898Z] IPC handlers registered, creating window
+[2026-06-30T03:33:00.900Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T03:33:00.902Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T03:33:00.904Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T03:33:00.906Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T03:33:01.064Z] Window created, visible=true
+[2026-06-30T03:39:11.114Z] All windows closed, platform=win32
+[2026-06-30T03:39:11.117Z] Quitting app
+[2026-06-30T04:33:22.337Z] === APP STARTING ===
+[2026-06-30T04:33:22.476Z] whenReady callback registered
+[2026-06-30T04:33:22.833Z] App ready event fired
+[2026-06-30T04:33:22.835Z] [Main] Initializing database...
+[2026-06-30T04:33:22.929Z] [Main] Database initialized
+[2026-06-30T04:33:26.213Z] [Main] Migrations complete: 0 applied
+[2026-06-30T04:33:26.247Z] [Main] Database ready
+[2026-06-30T04:33:26.249Z] Database initialized, registering IPC handlers
+[2026-06-30T04:33:26.252Z] IPC handlers registered, creating window
+[2026-06-30T04:33:26.254Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T04:33:26.256Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T04:33:26.257Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T04:33:26.262Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T04:33:29.446Z] Window created, visible=true
+[2026-06-30T04:41:46.565Z] === APP STARTING ===
+[2026-06-30T04:41:46.582Z] whenReady callback registered
+[2026-06-30T04:41:46.760Z] App ready event fired
+[2026-06-30T04:41:46.762Z] [Main] Initializing database...
+[2026-06-30T04:41:46.844Z] [Main] Database initialized
+[2026-06-30T04:41:46.984Z] [Main] Migrations complete: 0 applied
+[2026-06-30T04:41:46.987Z] [Main] Database ready
+[2026-06-30T04:41:46.989Z] Database initialized, registering IPC handlers
+[2026-06-30T04:41:46.992Z] IPC handlers registered, creating window
+[2026-06-30T04:41:46.994Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T04:41:46.998Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T04:41:46.999Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T04:41:47.001Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T04:41:47.167Z] Window created, visible=true
+[2026-06-30T04:55:33.964Z] === APP STARTING ===
+[2026-06-30T04:55:34.095Z] whenReady callback registered
+[2026-06-30T04:55:34.269Z] App ready event fired
+[2026-06-30T04:55:34.291Z] [Main] Initializing database...
+[2026-06-30T04:55:34.511Z] [Main] Database initialized
+[2026-06-30T04:55:37.909Z] [Main] Migrations complete: 0 applied
+[2026-06-30T04:55:37.912Z] [Main] Database ready
+[2026-06-30T04:55:37.914Z] Database initialized, registering IPC handlers
+[2026-06-30T04:55:37.917Z] IPC handlers registered, creating window
+[2026-06-30T04:55:37.919Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T04:55:37.921Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T04:55:37.923Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T04:55:37.925Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T04:55:38.139Z] Window created, visible=true
+[2026-06-30T05:15:40.523Z] === APP STARTING ===
+[2026-06-30T05:15:40.566Z] whenReady callback registered
+[2026-06-30T05:15:40.748Z] App ready event fired
+[2026-06-30T05:15:40.752Z] [Main] Initializing database...
+[2026-06-30T05:15:41.195Z] [Main] Database initialized
+[2026-06-30T05:15:42.337Z] [Main] Migrations complete: 0 applied
+[2026-06-30T05:15:43.118Z] [Main] Database ready
+[2026-06-30T05:15:44.355Z] Database initialized, registering IPC handlers
+[2026-06-30T05:15:44.359Z] IPC handlers registered, creating window
+[2026-06-30T05:15:44.377Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T05:15:44.379Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T05:15:44.381Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T05:15:44.382Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T05:15:44.516Z] Window created, visible=true
+[2026-06-30T05:22:16.020Z] All windows closed, platform=win32
+[2026-06-30T05:22:16.067Z] Quitting app
+[2026-06-30T05:35:34.829Z] === APP STARTING ===
+[2026-06-30T05:35:35.077Z] whenReady callback registered
+[2026-06-30T05:35:39.871Z] App ready event fired
+[2026-06-30T05:35:39.876Z] [Main] Initializing database...
+[2026-06-30T05:35:43.734Z] [Main] Database initialized
+[2026-06-30T05:35:44.018Z] [Main] Migrations complete: 0 applied
+[2026-06-30T05:35:44.257Z] [Main] Database ready
+[2026-06-30T05:35:44.395Z] Database initialized, registering IPC handlers
+[2026-06-30T05:35:44.558Z] IPC handlers registered, creating window
+[2026-06-30T05:35:44.824Z] [Main] Preload path: D:\DNR Vyapar Next\dist-electron\win-unpacked\resources\preload.js
+[2026-06-30T05:35:44.912Z] [Main] __dirname: D:\DNR Vyapar Next\dist-electron\win-unpacked\resources\app.asar\electron
+[2026-06-30T05:35:45.066Z] [Main] resourcesPath: D:\DNR Vyapar Next\dist-electron\win-unpacked\resources
+[2026-06-30T05:35:45.138Z] [Main] app.getAppPath(): D:\DNR Vyapar Next\dist-electron\win-unpacked\resources\app.asar
+[2026-06-30T05:36:08.427Z] Window created, visible=true
+[2026-06-30T05:38:46.914Z] All windows closed, platform=win32
+[2026-06-30T05:38:46.938Z] Quitting app
+[2026-06-30T05:39:19.713Z] === APP STARTING ===
+[2026-06-30T05:39:19.920Z] whenReady callback registered
+[2026-06-30T05:39:20.179Z] App ready event fired
+[2026-06-30T05:39:20.181Z] [Main] Initializing database...
+[2026-06-30T05:39:23.097Z] [Main] Database initialized
+[2026-06-30T05:39:25.888Z] [Main] Migrations complete: 0 applied
+[2026-06-30T05:39:25.952Z] [Main] Database ready
+[2026-06-30T05:39:26.196Z] Database initialized, registering IPC handlers
+[2026-06-30T05:39:26.199Z] IPC handlers registered, creating window
+[2026-06-30T05:39:26.201Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T05:39:26.203Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T05:39:26.204Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T05:39:26.207Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T05:39:41.201Z] Window created, visible=true
+[2026-06-30T05:42:10.700Z] === APP STARTING ===
+[2026-06-30T05:42:10.719Z] whenReady callback registered
+[2026-06-30T05:42:10.953Z] App ready event fired
+[2026-06-30T05:42:10.955Z] [Main] Initializing database...
+[2026-06-30T05:42:11.041Z] [Main] Database initialized
+[2026-06-30T05:42:11.643Z] [Main] Migrations complete: 0 applied
+[2026-06-30T05:42:11.646Z] [Main] Database ready
+[2026-06-30T05:42:11.672Z] Database initialized, registering IPC handlers
+[2026-06-30T05:42:11.674Z] IPC handlers registered, creating window
+[2026-06-30T05:42:11.677Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T05:42:11.679Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T05:42:11.680Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T05:42:11.682Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T05:42:11.877Z] Window created, visible=true
+[2026-06-30T05:46:40.384Z] === APP STARTING ===
+[2026-06-30T05:46:40.553Z] whenReady callback registered
+[2026-06-30T05:46:40.653Z] App ready event fired
+[2026-06-30T05:46:40.656Z] [Main] Initializing database...
+[2026-06-30T05:46:40.743Z] [Main] Database initialized
+[2026-06-30T05:46:45.276Z] [Main] Migrations complete: 0 applied
+[2026-06-30T05:46:45.322Z] [Main] Database ready
+[2026-06-30T05:46:45.334Z] Database initialized, registering IPC handlers
+[2026-06-30T05:46:45.546Z] IPC handlers registered, creating window
+[2026-06-30T05:46:45.548Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T05:46:45.550Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T05:46:45.552Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T05:46:45.555Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T05:46:54.562Z] Window created, visible=true
+[2026-06-30T05:57:40.073Z] === APP STARTING ===
+[2026-06-30T05:57:40.082Z] whenReady callback registered
+[2026-06-30T05:57:40.177Z] App ready event fired
+[2026-06-30T05:57:40.200Z] [Main] Initializing database...
+[2026-06-30T05:57:40.286Z] [Main] Database initialized
+[2026-06-30T05:57:41.755Z] [Main] Migrations complete: 0 applied
+[2026-06-30T05:57:41.758Z] [Main] Database ready
+[2026-06-30T05:57:41.760Z] Database initialized, registering IPC handlers
+[2026-06-30T05:57:41.764Z] IPC handlers registered, creating window
+[2026-06-30T05:57:41.766Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T05:57:41.768Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T05:57:41.770Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T05:57:41.771Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T05:57:45.660Z] Window created, visible=true
+[2026-06-30T06:12:12.075Z] === APP STARTING ===
+[2026-06-30T06:12:12.339Z] whenReady callback registered
+[2026-06-30T06:12:12.445Z] App ready event fired
+[2026-06-30T06:12:12.447Z] [Main] Initializing database...
+[2026-06-30T06:12:12.542Z] [Main] Database initialized
+[2026-06-30T06:12:13.570Z] [Main] Migrations complete: 0 applied
+[2026-06-30T06:12:13.728Z] [Main] Database ready
+[2026-06-30T06:12:13.731Z] Database initialized, registering IPC handlers
+[2026-06-30T06:12:13.734Z] IPC handlers registered, creating window
+[2026-06-30T06:12:13.736Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T06:12:13.739Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T06:12:13.741Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T06:12:13.742Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T06:12:17.245Z] Window created, visible=true
+[2026-06-30T06:18:23.485Z] === APP STARTING ===
+[2026-06-30T06:18:23.501Z] whenReady callback registered
+[2026-06-30T06:18:23.729Z] App ready event fired
+[2026-06-30T06:18:23.731Z] [Main] Initializing database...
+[2026-06-30T06:18:23.813Z] [Main] Database initialized
+[2026-06-30T06:18:24.116Z] [Main] Migrations complete: 0 applied
+[2026-06-30T06:18:24.119Z] [Main] Database ready
+[2026-06-30T06:18:24.121Z] Database initialized, registering IPC handlers
+[2026-06-30T06:18:24.123Z] IPC handlers registered, creating window
+[2026-06-30T06:18:24.125Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T06:18:24.127Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T06:18:24.129Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T06:18:24.131Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T06:18:24.263Z] Window created, visible=true
+[2026-06-30T06:29:11.818Z] === APP STARTING ===
+[2026-06-30T06:29:11.826Z] whenReady callback registered
+[2026-06-30T06:29:12.084Z] App ready event fired
+[2026-06-30T06:29:12.086Z] [Main] Initializing database...
+[2026-06-30T06:29:12.181Z] [Main] Database initialized
+[2026-06-30T06:29:12.235Z] [Main] Migrations complete: 0 applied
+[2026-06-30T06:29:12.238Z] [Main] Database ready
+[2026-06-30T06:29:12.240Z] Database initialized, registering IPC handlers
+[2026-06-30T06:29:12.243Z] IPC handlers registered, creating window
+[2026-06-30T06:29:12.245Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T06:29:12.247Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T06:29:12.248Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T06:29:12.263Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T06:29:12.482Z] Window created, visible=true
+[2026-06-30T06:32:31.100Z] === APP STARTING ===
+[2026-06-30T06:32:31.224Z] whenReady callback registered
+[2026-06-30T06:32:31.346Z] App ready event fired
+[2026-06-30T06:32:31.349Z] [Main] Initializing database...
+[2026-06-30T06:32:31.432Z] [Main] Database initialized
+[2026-06-30T06:32:31.557Z] [Main] Migrations complete: 0 applied
+[2026-06-30T06:32:31.559Z] [Main] Database ready
+[2026-06-30T06:32:31.563Z] Database initialized, registering IPC handlers
+[2026-06-30T06:32:31.565Z] IPC handlers registered, creating window
+[2026-06-30T06:32:31.567Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T06:32:31.569Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T06:32:31.570Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T06:32:31.572Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T06:32:31.714Z] Window created, visible=true
+[2026-06-30T07:00:27.383Z] === APP STARTING ===
+[2026-06-30T07:00:27.598Z] whenReady callback registered
+[2026-06-30T07:00:28.135Z] App ready event fired
+[2026-06-30T07:00:28.184Z] [Main] Initializing database...
+[2026-06-30T07:00:31.216Z] [Main] Database initialized
+[2026-06-30T07:00:33.894Z] [Main] Migrations complete: 0 applied
+[2026-06-30T07:00:34.021Z] [Main] Database ready
+[2026-06-30T07:00:34.121Z] Database initialized, registering IPC handlers
+[2026-06-30T07:00:34.193Z] IPC handlers registered, creating window
+[2026-06-30T07:00:34.317Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T07:00:34.392Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T07:00:34.394Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T07:00:34.396Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T07:00:43.079Z] Window created, visible=true
+[2026-06-30T07:04:55.374Z] === APP STARTING ===
+[2026-06-30T07:04:55.582Z] whenReady callback registered
+[2026-06-30T07:04:55.917Z] App ready event fired
+[2026-06-30T07:04:55.920Z] [Main] Initializing database...
+[2026-06-30T07:04:56.101Z] [Main] Database initialized
+[2026-06-30T07:04:58.615Z] [Main] Migrations complete: 0 applied
+[2026-06-30T07:04:58.618Z] [Main] Database ready
+[2026-06-30T07:04:58.639Z] Database initialized, registering IPC handlers
+[2026-06-30T07:04:58.642Z] IPC handlers registered, creating window
+[2026-06-30T07:04:58.645Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T07:04:58.647Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T07:04:58.649Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T07:04:58.651Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T07:05:02.882Z] Window created, visible=true
+[2026-06-30T08:02:35.569Z] === APP STARTING ===
+[2026-06-30T08:02:35.684Z] whenReady callback registered
+[2026-06-30T08:02:36.158Z] App ready event fired
+[2026-06-30T08:02:36.175Z] [Main] Initializing database...
+[2026-06-30T08:02:38.976Z] [Main] Database initialized
+[2026-06-30T08:02:39.773Z] [Main] Migrations complete: 1 applied
+[2026-06-30T08:02:39.786Z] [Main] Database ready
+[2026-06-30T08:02:39.788Z] Database initialized, registering IPC handlers
+[2026-06-30T08:02:39.791Z] IPC handlers registered, creating window
+[2026-06-30T08:02:39.793Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T08:02:39.800Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T08:02:39.803Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T08:02:39.804Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T08:02:46.252Z] Window created, visible=true
+[2026-06-30T08:38:40.436Z] === APP STARTING ===
+[2026-06-30T08:38:40.477Z] whenReady callback registered
+[2026-06-30T08:38:41.036Z] App ready event fired
+[2026-06-30T08:38:41.038Z] [Main] Initializing database...
+[2026-06-30T08:38:45.860Z] [Main] Database initialized
+[2026-06-30T08:38:46.863Z] [Main] Migrations complete: 0 applied
+[2026-06-30T08:38:46.876Z] [Main] Database ready
+[2026-06-30T08:38:46.881Z] Database initialized, registering IPC handlers
+[2026-06-30T08:38:46.884Z] IPC handlers registered, creating window
+[2026-06-30T08:38:46.886Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T08:38:46.887Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T08:38:46.889Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T08:38:46.891Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T08:38:56.065Z] Window created, visible=true
+[2026-06-30T09:14:12.042Z] === APP STARTING ===
+[2026-06-30T09:14:12.434Z] whenReady callback registered
+[2026-06-30T09:14:16.180Z] App ready event fired
+[2026-06-30T09:14:16.183Z] [Main] Initializing database...
+[2026-06-30T09:14:17.737Z] [Main] Database initialized
+[2026-06-30T09:14:18.322Z] FATAL: duplicate column name: legal_name
+Error: duplicate column name: legal_name
+    at e.handleError (D:\DNR Vyapar Next\node_modules\sql.js\dist\sql-wasm.js:90:192)
+    at e.run (D:\DNR Vyapar Next\node_modules\sql.js\dist\sql-wasm.js:87:256)
+    at Object.runQuery (D:\DNR Vyapar Next\electron\adapters\sqlite-adapter.cjs:156:16)
+    at Object.runAllMigrations (D:\DNR Vyapar Next\electron\adapters\migration-runner.cjs:48:23)
+    at async initializeDatabase (D:\DNR Vyapar Next\electron\main.cjs:86:18)
+    at async D:\DNR Vyapar Next\electron\main.cjs:372:5
+[2026-06-30T09:37:03.204Z] === APP STARTING ===
+[2026-06-30T09:37:03.768Z] whenReady callback registered
+[2026-06-30T09:37:07.073Z] App ready event fired
+[2026-06-30T09:37:07.078Z] [Main] Initializing database...
+[2026-06-30T09:37:10.253Z] [Main] Database initialized
+[2026-06-30T09:37:11.477Z] FATAL: duplicate column name: legal_name
+Error: duplicate column name: legal_name
+    at e.handleError (D:\DNR Vyapar Next\node_modules\sql.js\dist\sql-wasm.js:90:192)
+    at e.run (D:\DNR Vyapar Next\node_modules\sql.js\dist\sql-wasm.js:87:256)
+    at Object.runQuery (D:\DNR Vyapar Next\electron\adapters\sqlite-adapter.cjs:156:16)
+    at Object.runAllMigrations (D:\DNR Vyapar Next\electron\adapters\migration-runner.cjs:48:23)
+    at async initializeDatabase (D:\DNR Vyapar Next\electron\main.cjs:86:18)
+    at async D:\DNR Vyapar Next\electron\main.cjs:384:5
+[2026-06-30T10:53:02.455Z] === APP STARTING ===
+[2026-06-30T10:53:02.657Z] whenReady callback registered
+[2026-06-30T10:53:05.087Z] App ready event fired
+[2026-06-30T10:53:05.089Z] [Main] Initializing database...
+[2026-06-30T10:53:06.264Z] [Main] Database initialized
+[2026-06-30T10:53:07.011Z] FATAL: duplicate column name: legal_name
+Error: duplicate column name: legal_name
+    at e.handleError (D:\DNR Vyapar Next\node_modules\sql.js\dist\sql-wasm.js:90:192)
+    at e.run (D:\DNR Vyapar Next\node_modules\sql.js\dist\sql-wasm.js:87:256)
+    at Object.runQuery (D:\DNR Vyapar Next\electron\adapters\sqlite-adapter.cjs:156:16)
+    at Object.runAllMigrations (D:\DNR Vyapar Next\electron\adapters\migration-runner.cjs:48:23)
+    at async initializeDatabase (D:\DNR Vyapar Next\electron\main.cjs:86:18)
+    at async D:\DNR Vyapar Next\electron\main.cjs:384:5
+[2026-06-30T10:59:16.943Z] === APP STARTING ===
+[2026-06-30T10:59:17.111Z] whenReady callback registered
+[2026-06-30T10:59:20.151Z] App ready event fired
+[2026-06-30T10:59:20.154Z] [Main] Initializing database...
+[2026-06-30T10:59:22.560Z] [Main] Database initialized
+[2026-06-30T10:59:23.176Z] FATAL: duplicate column name: legal_name
+Error: duplicate column name: legal_name
+    at e.handleError (D:\DNR Vyapar Next\node_modules\sql.js\dist\sql-wasm.js:90:192)
+    at e.run (D:\DNR Vyapar Next\node_modules\sql.js\dist\sql-wasm.js:87:256)
+    at Object.runQuery (D:\DNR Vyapar Next\electron\adapters\sqlite-adapter.cjs:158:16)
+    at Object.runAllMigrations (D:\DNR Vyapar Next\electron\adapters\migration-runner.cjs:48:23)
+    at async initializeDatabase (D:\DNR Vyapar Next\electron\main.cjs:86:18)
+    at async D:\DNR Vyapar Next\electron\main.cjs:384:5
+[2026-06-30T11:11:07.525Z] === APP STARTING ===
+[2026-06-30T11:11:07.622Z] whenReady callback registered
+[2026-06-30T11:11:10.720Z] App ready event fired
+[2026-06-30T11:11:10.723Z] [Main] Initializing database...
+[2026-06-30T11:11:13.087Z] [Main] Database initialized
+[2026-06-30T11:11:14.160Z] [Main] Migrations complete: 17 applied
+[2026-06-30T11:11:14.819Z] [Main] Default admin user created (password: admin123)
+[2026-06-30T11:11:14.821Z] [Main] Database ready
+[2026-06-30T11:11:14.822Z] Database initialized, registering IPC handlers
+[2026-06-30T11:11:14.825Z] IPC handlers registered, creating window
+[2026-06-30T11:11:14.827Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T11:11:14.829Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T11:11:14.830Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T11:11:14.832Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T11:11:23.463Z] Window created, visible=true
+[2026-06-30T11:19:36.302Z] === APP STARTING ===
+[2026-06-30T11:19:36.573Z] whenReady callback registered
+[2026-06-30T11:19:40.288Z] App ready event fired
+[2026-06-30T11:19:40.291Z] [Main] Initializing database...
+[2026-06-30T11:19:41.783Z] [Main] Database initialized
+[2026-06-30T11:19:42.199Z] [Main] Migrations complete: 0 applied
+[2026-06-30T11:19:42.209Z] [Main] Database ready
+[2026-06-30T11:19:42.210Z] Database initialized, registering IPC handlers
+[2026-06-30T11:19:42.213Z] IPC handlers registered, creating window
+[2026-06-30T11:19:42.215Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T11:19:42.217Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T11:19:42.219Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T11:19:42.220Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T11:19:48.264Z] Window created, visible=true
+[2026-06-30T11:22:40.997Z] === APP STARTING ===
+[2026-06-30T11:22:41.155Z] whenReady callback registered
+[2026-06-30T11:22:43.740Z] App ready event fired
+[2026-06-30T11:22:43.744Z] [Main] Initializing database...
+[2026-06-30T11:22:45.936Z] [Main] Database initialized
+[2026-06-30T11:22:46.501Z] [Main] Migrations complete: 0 applied
+[2026-06-30T11:22:46.524Z] [Main] Database ready
+[2026-06-30T11:22:46.550Z] Database initialized, registering IPC handlers
+[2026-06-30T11:22:46.552Z] IPC handlers registered, creating window
+[2026-06-30T11:22:46.554Z] [Main] Preload path: D:\DNR Vyapar Next\electron\preload.js
+[2026-06-30T11:22:46.556Z] [Main] __dirname: D:\DNR Vyapar Next\electron
+[2026-06-30T11:22:46.557Z] [Main] resourcesPath: D:\DNR Vyapar Next\node_modules\electron\dist\resources
+[2026-06-30T11:22:46.559Z] [Main] app.getAppPath(): D:\DNR Vyapar Next
+[2026-06-30T11:22:56.483Z] Window created, visible=true

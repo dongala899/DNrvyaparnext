@@ -1,0 +1,23 @@
+{
+  "name": "customer-pos",
+  "version": "1.0.0",
+  "description": "Point-of-sale quick billing with cart and invoice creation",
+  "dependencies": ["items", "customers", "invoices"],
+  "storagePrefix": "pos_",
+  "channels": {
+    "commands": {
+      "handled": ["pos:addLine", "pos:updateLine", "pos:removeLine", "pos:resetCart", "pos:createInvoiceFromCart"],
+      "issued": []
+    },
+    "events": {
+      "emitted": ["pos:cartUpdated", "pos:cartReset", "pos:invoiceCreated"],
+      "subscribed": []
+    }
+  },
+  "routes": [
+    {"path": "/pos", "element": "PosPage", "title": "POS"},
+    {"path": "/pos/customer/:customerId", "element": "PosPage", "title": "POS for Customer"}
+  ],
+  "menu": {"label": "Customer Orders", "icon": "shopping-cart", "order": 70},
+  "migrations": []
+}
