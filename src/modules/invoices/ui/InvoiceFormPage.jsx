@@ -76,6 +76,11 @@ export default function InvoiceFormPage() {
     finally { setLoading(false); }
   }
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
   const handleCustomerChange = (e) => {
     const customerId = e.target.value;
     const customer = customers.find(c => c.id === customerId);
