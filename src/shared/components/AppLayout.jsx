@@ -61,9 +61,16 @@ export function AppLayout() {
     if (appReady && !currentUser && location.pathname !== '/login') {
       navigate('/login');
     }
-  }, [currentUser, appReady, navigate, location.pathname]);
+    if (appReady && currentUser && !currentCompany && location.pathname !== '/select-company') {
+      navigate('/select-company');
+    }
+  }, [currentUser, currentCompany, appReady, navigate, location.pathname]);
 
   if (!currentUser && appReady && location.pathname !== '/login') {
+    return <Outlet />;
+  }
+
+  if (currentUser && !currentCompany && appReady && location.pathname !== '/select-company') {
     return <Outlet />;
   }
 

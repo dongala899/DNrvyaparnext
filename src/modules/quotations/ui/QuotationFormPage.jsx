@@ -11,11 +11,21 @@ export default function QuotationFormPage() {
     validityDate: '', notes: '', status: 'draft',
     lines: [{ id: crypto.randomUUID(), itemId: '', itemName: '', quantity: 1, rate: 0, discount: 0, gstRate: 18, subtotal: 0, total: 0 }],
   });
+  const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
   const navigate = useNavigate();
 
-  useEffect(() => { if (isEdit) loadQuotation(); }, [id]);
+  useEffect(() => { loadCustomers(); if (isEdit) loadQuotation(); }, [id]);
+
+  async function loadCustomers() {
+    try {
+      const bus = window.__shell?.commandBus;
+      const res = await bus.invoke('customer:getList');
+      if (res.success) setCustomers(res.data);
+    } catch (err) {}
+  }
 
   async function loadQuotation() {
     setLoading(true);
@@ -39,6 +49,12 @@ export default function QuotationFormPage() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleCustomerChange = (e) => {
+    const customerId = e.target.value;
+    const customer = customers.find(c => c.id === customerId);
+    setFormData(prev => ({ ...prev, customerId, customerName: customer?.name || '' }));
+  };
+
   const handleLineChange = (idx, field, value) => {
     const lines = [...formData.lines];
     lines[idx] = { ...lines[idx], [field]: value };
@@ -60,14 +76,21 @@ export default function QuotationFormPage() {
   };
 
   const computeTotals = () => {
-    const subtotal = formData.lines.reduce((s, l) => s + (l.subtotal || 0), 0);
-    const taxAmount = formData.lines.reduce((s, l) => s + ((l.subtotal || 0) * (l.gstRate || 0) / 100), 0);
-    const discountAmount = formData.lines.reduce((s, l) => s + (l.discount || 0), 0);
-    return { subtotal, taxAmount, discountAmount, totalAmount: subtotal + taxAmount - discountAmount };
+    const subtotal = formData.lines.reduce((s, l) => s + (Number(l.subtotal) || 0), 0);
+    const taxAmount = formData.lines.reduce((s, l) => s + (Number(l.subtotal || 0) * (Number(l.gstRate) || 0) / 100), 0);
+    const discountAmount = formData.lines.reduce((s, l) => s + (Number(l.discount) || 0), 0);
+    const totalAmount = subtotal + taxAmount - discountAmount;
+    return { subtotal, taxAmount, discountAmount, totalAmount };
   };
 
   async function handleSubmit(e) {
     e.preventDefault();
+    const errors = {};
+    if (!formData.customerId) errors.customerId = 'Customer is required';
+    if (formData.lines.length === 0) errors.lines = 'Add at least one line item';
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) { setError('Please fix the errors below'); return; }
+
     setLoading(true);
     setError('');
     try {
@@ -88,6 +111,7 @@ export default function QuotationFormPage() {
     <div style={{ padding: 'var(--spacing-xl)', maxWidth: '1200px' }}>
       <h1 style={{ marginBottom: 'var(--spacing-lg)' }}>{isEdit ? 'Edit Quotation' : 'New Quotation'}</h1>
       {error && <div className="alert alert-error">{error}</div>}
+      {fieldErrors.lines && <div className="alert alert-error">{fieldErrors.lines}</div>}
 
       <form onSubmit={handleSubmit}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--spacing-md)' }}>
@@ -107,8 +131,12 @@ export default function QuotationFormPage() {
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--spacing-md)' }}>
           <div className="form-group">
-            <label htmlFor="customerId">Customer ID</label>
-            <input type="text" id="customerId" name="customerId" value={formData.customerId} onChange={handleChange} required />
+            <label htmlFor="customerId">Customer</label>
+            <select name="customerId" value={formData.customerId} onChange={handleCustomerChange} required style={{ width: '100%', padding: '10px 12px', border: '1px solid var(--color-border)', borderRadius: '6px' }}>
+              <option value="">-- Select Customer --</option>
+              {customers.map(c => <option key={c.id} value={c.id}>{c.name || c.full_name}</option>)}
+            </select>
+            {fieldErrors.customerId && <div className="alert alert-error" style={{ marginTop: '4px', padding: '6px 8px', fontSize: '0.85em' }}>{fieldErrors.customerId}</div>}
           </div>
           <div className="form-group">
             <label htmlFor="customerName">Customer Name</label>
@@ -146,10 +174,10 @@ export default function QuotationFormPage() {
         <div style={{ marginTop: 'var(--spacing-lg)', display: 'grid', gridTemplateColumns: '1fr 200px', gap: 'var(--spacing-md)' }}>
           <div className="form-group"><label htmlFor="notes">Notes</label><textarea id="notes" name="notes" value={formData.notes} onChange={handleChange} rows="3" /></div>
           <div style={{ border: '1px solid var(--color-border)', padding: 'var(--spacing-md)' }}>
-            <p style={{ display: 'flex', justifyContent: 'space-between' }}><span>Subtotal:</span> <strong>₹{totals.subtotal.toFixed(2)}</strong></p>
-            <p style={{ display: 'flex', justifyContent: 'space-between' }}><span>Tax:</span> <strong>₹{totals.taxAmount.toFixed(2)}</strong></p>
-            <p style={{ display: 'flex', justifyContent: 'space-between' }}><span>Discount:</span> <strong>-₹{totals.discountAmount.toFixed(2)}</strong></p>
-            <p style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.2em' }}><span>Total:</span> <strong>₹{totals.totalAmount.toFixed(2)}</strong></p>
+            <p style={{ display: 'flex', justifyContent: 'space-between' }}><span>Subtotal:</span> <strong>₹{(totals.subtotal || 0).toFixed(2)}</strong></p>
+            <p style={{ display: 'flex', justifyContent: 'space-between' }}><span>Tax:</span> <strong>₹{(totals.taxAmount || 0).toFixed(2)}</strong></p>
+            <p style={{ display: 'flex', justifyContent: 'space-between' }}><span>Discount:</span> <strong>-₹{(totals.discountAmount || 0).toFixed(2)}</strong></p>
+            <p style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.2em' }}><span>Total:</span> <strong>₹{(totals.totalAmount || 0).toFixed(2)}</strong></p>
           </div>
         </div>
 

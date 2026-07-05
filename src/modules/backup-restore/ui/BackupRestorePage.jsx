@@ -120,8 +120,12 @@ export function BackupRestorePage() {
         setProgress({ percent: 50, status: `Restoring ${filename}...` });
         const bus = getCommandBus();
         const restoreResult = await bus.invoke('backup:restore', { filename, type: 'sqlite' });
-        if (restoreResult.success) setProgress({ percent: 100, status: 'Restore complete' });
-        else setError(restoreResult.error || 'Restore failed');
+        if (restoreResult.success) {
+          setProgress({ percent: 100, status: 'Restore complete. Reloading...' });
+          setTimeout(() => window.location.reload(), 1500);
+        } else {
+          setError(restoreResult.error || 'Restore failed');
+        }
       }
     } catch (err) { setError(err.message); }
     finally { setTimeout(() => setProgress(null), 3000); }
@@ -131,11 +135,12 @@ export function BackupRestorePage() {
     setError('');
     try {
       const result = await window.api.dialog.openFile({ filters: [{ name: 'JSON Files', extensions: ['json'] }] });
-      if (result.success && result.data?.filePath) {
+      if (result.success && result.data?.length > 0) {
+        const filePath = result.data[0];
         setProgress({ percent: 50, status: 'Importing...' });
         const bus = getCommandBus();
-        const importResult = await bus.invoke('backup:importJson', { filePath: result.data[0] });
-        if (importResult.success) setProgress({ percent: 100, status: 'Import complete' });
+        const importResult = await bus.invoke('backup:importJson', { filePath });
+        if (importResult.success) setProgress({ percent: 100, status: `Import complete. ${importResult.data?.imported || 0} records imported.` });
         else setError(importResult.error || 'Import failed');
       }
     } catch (err) { setError(err.message); }

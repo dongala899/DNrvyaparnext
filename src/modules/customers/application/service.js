@@ -1,4 +1,4 @@
-import { createCustomer } from '../domain/entities.js';
+import { createCustomer, getCompanyId } from '../domain/entities.js';
 import { CustomerNotFoundError } from '../domain/errors.js';
 
 export class CustomerService {
@@ -14,12 +14,17 @@ export class CustomerService {
     };
   }
 
+  companyId() {
+    return getCompanyId(this.sharedState);
+  }
+
   async create(data) {
     this.logger.info('Creating customer', data.name);
 
     const customer = createCustomer({
       ...data,
       id: crypto.randomUUID(),
+      companyId: this.companyId(),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
@@ -29,6 +34,7 @@ export class CustomerService {
       table: 'customers',
       values: {
         id: customer.id,
+        company_id: customer.companyId,
         name: customer.name,
         email: customer.email || null,
         phone: customer.phone || null,
@@ -69,7 +75,7 @@ export class CustomerService {
     await this.storage.runQuery({
       type: 'update',
       table: 'customers',
-      where: { id },
+      where: { id, company_id: this.companyId() },
       values: {
         name: customer.name,
         email: customer.email || null,
@@ -103,7 +109,7 @@ export class CustomerService {
     await this.storage.runQuery({
       type: 'delete',
       table: 'customers',
-      where: { id },
+      where: { id, company_id: this.companyId() },
     });
 
     this.eventBus.emit('customer:deleted', { id });
@@ -113,7 +119,7 @@ export class CustomerService {
   async findById(id) {
     const result = await this.storage.runQuery({
       table: 'customers',
-      where: { id },
+      where: { id, company_id: this.companyId() },
       limit: 1,
     });
 
@@ -122,6 +128,7 @@ export class CustomerService {
 
     return createCustomer({
       id: row.id,
+      companyId: row.company_id,
       name: row.name,
       email: row.email || '',
       phone: row.phone || '',
@@ -144,20 +151,17 @@ export class CustomerService {
 
   async getList(params = {}) {
     const { search, isActive, limit = 50, offset = 0 } = params;
+    const cid = this.companyId();
 
-    let sql = 'SELECT * FROM customers WHERE 1=1';
+    let sql = 'SELECT * FROM customers';
     const whereValues = [];
+    const whereClauses = [];
 
-    if (search) {
-      sql += ' AND (name LIKE ? OR email LIKE ? OR phone LIKE ?)';
-      whereValues.push(`%${search}%`, `%${search}%`, `%${search}%`);
-    }
+    if (cid) whereClauses.push('company_id = ?'), whereValues.push(cid);
+    if (search) whereClauses.push('(name LIKE ? OR email LIKE ? OR phone LIKE ?)'), whereValues.push(`%${search}%`, `%${search}%`, `%${search}%`);
+    if (isActive !== undefined) whereClauses.push('is_active = ?'), whereValues.push(isActive ? 1 : 0);
 
-    if (isActive !== undefined) {
-      sql += ' AND is_active = ?';
-      whereValues.push(isActive ? 1 : 0);
-    }
-
+    if (whereClauses.length > 0) sql += ' WHERE ' + whereClauses.join(' AND ');
     sql += ' ORDER BY name LIMIT ? OFFSET ?';
     whereValues.push(limit, offset);
 
@@ -171,6 +175,7 @@ export class CustomerService {
 
     const customers = (rows?.data || []).map(row => createCustomer({
       id: row.id,
+      companyId: row.company_id,
       name: row.name,
       email: row.email || '',
       phone: row.phone || '',

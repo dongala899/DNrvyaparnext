@@ -1,4 +1,4 @@
-import { createItem } from '../domain/entities.js';
+import { createItem, getCompanyId } from '../domain/entities.js';
 import { ItemNotFoundError, DuplicateSKUError } from '../domain/errors.js';
 
 export class ItemService {
@@ -14,13 +14,17 @@ export class ItemService {
     };
   }
 
+  companyId() {
+    return getCompanyId(this.sharedState);
+  }
+
   async create(data) {
     this.logger.info('Creating item', data.name);
 
     if (data.sku) {
       const existing = await this.storage.runQuery({
         table: 'items',
-        where: { sku: data.sku },
+        where: { sku: data.sku, company_id: this.companyId() },
         limit: 1,
       });
       if (existing?.data?.[0]) {
@@ -31,6 +35,7 @@ export class ItemService {
     const item = createItem({
       ...data,
       id: crypto.randomUUID(),
+      companyId: this.companyId(),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
@@ -40,6 +45,7 @@ export class ItemService {
       table: 'items',
       values: {
         id: item.id,
+        company_id: item.companyId,
         name: item.name,
         sku: item.sku || null,
         hsn_code: item.hsnCode || null,
@@ -70,7 +76,7 @@ export class ItemService {
     if (data.sku && data.sku !== existing.sku) {
       const dup = await this.storage.runQuery({
         table: 'items',
-        where: { sku: data.sku },
+        where: { sku: data.sku, company_id: this.companyId() },
         limit: 1,
       });
       if (dup?.data?.[0]) {
@@ -119,7 +125,7 @@ export class ItemService {
     await this.storage.runQuery({
       type: 'delete',
       table: 'items',
-      where: { id },
+      where: { id, company_id: this.companyId() },
     });
 
     this.eventBus.emit('item:deleted', { id });
@@ -129,7 +135,7 @@ export class ItemService {
   async findById(id) {
     const result = await this.storage.runQuery({
       table: 'items',
-      where: { id },
+      where: { id, company_id: this.companyId() },
       limit: 1,
     });
 
@@ -138,6 +144,7 @@ export class ItemService {
 
     return createItem({
       id: row.id,
+      companyId: row.company_id,
       name: row.name,
       sku: row.sku || '',
       hsnCode: row.hsn_code || '',
@@ -155,20 +162,17 @@ export class ItemService {
 
   async getList(params = {}) {
     const { search, isActive, limit = 50, offset = 0 } = params;
+    const cid = this.companyId();
 
-    let sql = 'SELECT * FROM items WHERE 1=1';
+    let sql = 'SELECT * FROM items';
     const whereValues = [];
+    const whereClauses = [];
 
-    if (search) {
-      sql += ' AND (name LIKE ? OR sku LIKE ? OR hsn_code LIKE ?)';
-      whereValues.push(`%${search}%`, `%${search}%`, `%${search}%`);
-    }
+    if (cid) whereClauses.push('company_id = ?'), whereValues.push(cid);
+    if (search) whereClauses.push('(name LIKE ? OR sku LIKE ? OR hsn_code LIKE ?)'), whereValues.push(`%${search}%`, `%${search}%`, `%${search}%`);
+    if (isActive !== undefined) whereClauses.push('is_active = ?'), whereValues.push(isActive ? 1 : 0);
 
-    if (isActive !== undefined) {
-      sql += ' AND is_active = ?';
-      whereValues.push(isActive ? 1 : 0);
-    }
-
+    if (whereClauses.length > 0) sql += ' WHERE ' + whereClauses.join(' AND ');
     sql += ' ORDER BY name LIMIT ? OFFSET ?';
     whereValues.push(limit, offset);
 
@@ -181,6 +185,7 @@ export class ItemService {
 
     const items = (rows?.data || []).map(row => createItem({
       id: row.id,
+      companyId: row.company_id,
       name: row.name,
       sku: row.sku || '',
       hsnCode: row.hsn_code || '',

@@ -19,7 +19,8 @@
     {"path": "/reports/ledger", "element": "LedgerReportPage", "title": "Ledger"},
     {"path": "/reports/profit-loss", "element": "ProfitLossReportPage", "title": "Profit & Loss"},
     {"path": "/reports/stock", "element": "StockReportPage", "title": "Stock"},
-    {"path": "/reports/daybook", "element": "DaybookReportPage", "title": "Daybook"}
+    {"path": "/reports/daybook", "element": "DaybookReportPage", "title": "Daybook"},
+    {"path": "/reports/balance-sheet", "element": "BalanceSheetReportPage", "title": "Balance Sheet"}
   ],
   "menu": {"label": "Reports", "icon": "bar-chart", "order": 120},
   "migrations": []

@@ -1,4 +1,4 @@
-import { createInvoice, createLineItem } from '../domain/entities.js';
+import { createInvoice, createLineItem, getCompanyId } from '../domain/entities.js';
 import { InvoiceNotFoundError, QuotationNotFoundError, InvalidInvoiceStateError } from '../domain/errors.js';
 
 const INVOICE_EDIT_START_DAY = 10;
@@ -45,6 +45,10 @@ export class InvoiceService {
     this.store = { items: [], setItems: (items) => { this.store.items = items; } };
   }
 
+  companyId() {
+    return getCompanyId(this.sharedState);
+  }
+
   generateInvoiceNumber(dateValue) {
     const safeDate = String(dateValue || '').trim() || new Date().toISOString().split('T')[0];
     const fyLabel = getFinancialYearLabel(safeDate);
@@ -88,6 +92,7 @@ export class InvoiceService {
       ...data,
       id: crypto.randomUUID(),
       invoiceNumber,
+      companyId: this.companyId(),
       date: invoiceDate,
       lines,
       ...totals,
@@ -101,15 +106,16 @@ export class InvoiceService {
       values: {
         id: invoice.id,
         invoice_number: invoice.invoiceNumber,
-        customer_id: invoice.customerId,
+        customer_id: invoice.customerId || null,
         customer_name: invoice.customerName || null,
-        company_id: invoice.companyId || null,
+        company_id: invoice.companyId,
         date: invoice.date,
         due_date: invoice.dueDate || null,
         quotation_id: invoice.quotationId || null,
         po_number: invoice.poNumber || null,
         po_date: invoice.poDate || null,
         shipping_address: invoice.shippingAddress || null,
+        customer_purchase_order_id: invoice.customerPurchaseOrderId || null,
         round_off: invoice.roundOff ? 1 : 0,
         round_off_amount: invoice.roundOffAmount || 0,
         subtotal: invoice.subtotal,
@@ -164,20 +170,27 @@ export class InvoiceService {
 
     const lines = data.lines.map(l => createLineItem(l));
     const totals = this.computeTotals(lines);
+    const cid = this.companyId();
     const invoice = createInvoice({ ...existing, ...data, id, lines, ...totals, updatedAt: new Date().toISOString() });
 
     await this.storage.runQuery({
       type: 'update',
       table: 'invoices',
-      where: { id },
+      where: cid ? { id, company_id: cid } : { id },
       values: {
         invoice_number: invoice.invoiceNumber,
-        customer_id: invoice.customerId,
+        customer_id: invoice.customerId || null,
         customer_name: invoice.customerName || null,
-        company_id: invoice.companyId || null,
+        company_id: invoice.companyId,
         date: invoice.date,
         due_date: invoice.dueDate || null,
         quotation_id: invoice.quotationId || null,
+        po_number: invoice.poNumber || null,
+        po_date: invoice.poDate || null,
+        shipping_address: invoice.shippingAddress || null,
+        customer_purchase_order_id: invoice.customerPurchaseOrderId || null,
+        round_off: invoice.roundOff ? 1 : 0,
+        round_off_amount: invoice.roundOffAmount || 0,
         subtotal: invoice.subtotal,
         tax_amount: invoice.taxAmount,
         discount_amount: invoice.discountAmount,
@@ -201,6 +214,9 @@ export class InvoiceService {
           invoice_id: invoice.id,
           item_id: line.itemId,
           item_name: line.itemName || null,
+          description: line.description || null,
+          hsn_sac: line.hsnSac || null,
+          unit: line.unit || 'Nos',
           quantity: line.quantity,
           rate: line.rate,
           discount: line.discount,
@@ -221,7 +237,8 @@ export class InvoiceService {
     const existing = await this.findById(id);
     if (!existing) throw new InvoiceNotFoundError(id);
     await this.storage.runQuery({ type: 'delete', table: 'invoice_lines', where: { invoice_id: id } });
-    await this.storage.runQuery({ type: 'delete', table: 'invoices', where: { id } });
+    const cid = this.companyId();
+    await this.storage.runQuery({ type: 'delete', table: 'invoices', where: cid ? { id, company_id: cid } : { id } });
     this.store.items = this.store.items.filter(inv => inv.id !== id);
     this.eventBus.emit('invoice:deleted', { id });
     return { success: true };
@@ -232,7 +249,8 @@ export class InvoiceService {
     const existing = await this.findById(id);
     if (!existing) throw new InvoiceNotFoundError(id);
     if (existing.status === 'cancelled') return { success: true, data: existing };
-    await this.storage.runQuery({ type: 'update', table: 'invoices', where: { id }, values: { status: 'cancelled', updated_at: new Date().toISOString() } });
+    const cid = this.companyId();
+    await this.storage.runQuery({ type: 'update', table: 'invoices', where: cid ? { id, company_id: cid } : { id }, values: { status: 'cancelled', updated_at: new Date().toISOString() } });
     const invoice = { ...existing, status: 'cancelled', updatedAt: new Date().toISOString() };
     this.eventBus.emit('invoice:cancelled', { invoice });
     return { success: true, data: invoice };
@@ -260,19 +278,23 @@ export class InvoiceService {
   }
 
   async findById(id) {
-    const result = await this.storage.runQuery({ table: 'invoices', where: { id }, limit: 1 });
+    const cid = this.companyId();
+    let result = await this.storage.runQuery({ table: 'invoices', where: cid ? { id, company_id: cid } : { id }, limit: 1 });
+    if (!result?.data?.[0] && cid) {
+      result = await this.storage.runQuery({ table: 'invoices', where: { id }, limit: 1 });
+    }
     const row = result?.data?.[0];
     if (!row) return null;
     const linesResult = await this.storage.runQuery({ table: 'invoice_lines', where: { invoice_id: row.id } });
     const lines = (linesResult?.data || []).map(lr =>
       createLineItem({
-        id: lr.id, itemId: lr.item_id, itemName: lr.item_name, description: lr.description,
-        hsnSac: lr.hsn_sac, unit: lr.unit || 'Nos', quantity: lr.quantity, rate: lr.rate,
+        id: lr.id, itemId: lr.item_id, itemName: lr.item_name, description: lr.description || undefined,
+        hsnSac: lr.hsn_sac || undefined, unit: lr.unit || 'Nos', quantity: lr.quantity, rate: lr.rate,
         discount: lr.discount, gstRate: lr.gst_rate, subtotal: lr.subtotal, total: lr.total,
       })
     );
     return createInvoice({
-      id: row.id, invoiceNumber: row.invoice_number, customerId: row.customer_id,
+      id: row.id, invoiceNumber: row.invoice_number,       customerId: row.customer_id || undefined,
       customerName: row.customer_name || undefined, companyId: row.company_id || undefined,
       date: row.date, dueDate: row.due_date || undefined, quotationId: row.quotation_id || undefined,
       poNumber: row.po_number || undefined, poDate: row.po_date || undefined,
@@ -288,8 +310,10 @@ export class InvoiceService {
 
   async getList(params = {}) {
     const { search, status, customerId, limit = 50, offset = 0 } = params;
+    const cid = this.companyId();
     let sql = 'SELECT * FROM invoices WHERE 1=1';
     const whereValues = [];
+    if (cid) { sql += ' AND company_id = ?'; whereValues.push(cid); }
     if (search) { sql += ' AND (invoice_number LIKE ? OR customer_name LIKE ?)'; whereValues.push(`%${search}%`, `%${search}%`); }
     if (status && status !== 'all') { sql += ' AND status = ?'; whereValues.push(status); }
     if (customerId) { sql += ' AND customer_id = ?'; whereValues.push(customerId); }
@@ -299,7 +323,7 @@ export class InvoiceService {
     return {
       success: true,
       data: (rows?.data || []).map(row => ({
-        id: row.id, invoiceNumber: row.invoice_number, customerId: row.customer_id,
+        id: row.id, invoiceNumber: row.invoice_number,       customerId: row.customer_id || undefined,
         customerName: row.customer_name || undefined, companyId: row.company_id || undefined,
         date: row.date, dueDate: row.due_date || undefined, quotationId: row.quotation_id || undefined,
         poNumber: row.po_number || undefined, poDate: row.po_date || undefined,

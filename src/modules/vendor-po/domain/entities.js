@@ -23,6 +23,7 @@ export const GrnLineSchema = z.object({
 
 export const PurchaseOrderSchema = z.object({
   id: z.string().min(1),
+  companyId: z.string().optional(),
   poNumber: z.string().min(1),
   vendorId: z.string().min(1),
   vendorName: z.string().optional(),
@@ -41,8 +42,10 @@ export const PurchaseOrderSchema = z.object({
 
 export const GrnSchema = z.object({
   id: z.string().min(1),
+  companyId: z.string().optional(),
   grnNumber: z.string().min(1),
   poId: z.string().min(1),
+  vendorId: z.string().optional(),
   date: z.string().datetime(),
   lines: z.array(GrnLineSchema),
   notes: z.string().optional(),
@@ -53,3 +56,7 @@ export function createPoLine(data) { return PoLineSchema.parse(data); }
 export function createGrnLine(data) { return GrnLineSchema.parse(data); }
 export function createPurchaseOrder(data) { return PurchaseOrderSchema.parse(data); }
 export function createGrn(data) { return GrnSchema.parse(data); }
+
+export function getCompanyId(sharedState) {
+  return sharedState.getState().currentCompany?.id;
+}

@@ -27,7 +27,16 @@ export function SettingsPage() {
     try {
       const commandBus = window.__shell?.commandBus;
       const result = await commandBus.invoke('license:getStatus');
-      if (result.success) setLicenseStatus(result.data);
+      if (result.success) {
+        setLicenseStatus(result.data);
+        const store = useStore.getState();
+        if (result.data.type === 'licensed') {
+          store.setLicensed(true);
+          store.setLicenseInfo({ status: 'licensed', licenseKey: result.data.key });
+        } else {
+          store.setLicensed(false);
+        }
+      }
     } catch (err) { setLicenseError(err.message); }
   }
 

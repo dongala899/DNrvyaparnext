@@ -6,7 +6,7 @@
   "storagePrefix": "preview_",
   "channels": {
     "commands": {
-      "handled": ["preview:open", "preview:close", "print:savePdf", "print:send", "printQueue:getList"],
+      "handled": ["preview:open", "preview:close", "print:exportDocument", "print:savePdf", "print:send", "print:getPrinters", "printQueue:getList"],
       "issued": []
     },
     "events": {

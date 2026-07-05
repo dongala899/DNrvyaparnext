@@ -12,13 +12,14 @@ export default function InvoiceFormPage() {
     poNumber: '', poDate: '', shippingAddress: '',
     customerPurchaseOrderId: '', roundOff: true,
     quotationId: '', notes: '', terms: '', status: 'draft',
-    lines: [{ id: crypto.randomUUID(), itemId: '', itemName: '', quantity: 1, rate: 0, discount: 0, gstRate: 18, subtotal: 0, total: 0 }],
+    lines: [{ id: crypto.randomUUID(), itemId: '', itemName: '', quantity: 1, rate: 0, discount: 0, gstRate: 18, hsnSac: '', subtotal: 0, total: 0 }],
   });
   const [customers, setCustomers] = useState([]);
   const [customerPos, setCustomerPos] = useState([]);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -88,6 +89,24 @@ export default function InvoiceFormPage() {
     loadCustomerPos(customerId);
   };
 
+  const handleItemSelect = (idx, itemId) => {
+    const item = items.find(i => i.id === itemId);
+    const lines = [...formData.lines];
+    lines[idx] = {
+      ...lines[idx],
+      itemId: item ? item.id : '',
+      itemName: item ? item.name : '',
+      hsnSac: item ? (item.hsnCode || '') : '',
+      rate: item ? item.sellingPrice : 0,
+      gstRate: item ? item.taxRate : 0,
+    };
+    const l = lines[idx];
+    l.subtotal = l.quantity * l.rate;
+    const tax = l.subtotal * (l.gstRate / 100);
+    l.total = l.subtotal + tax - l.discount;
+    setFormData(prev => ({ ...prev, lines }));
+  };
+
   const handleLineChange = (idx, field, value) => {
     const lines = [...formData.lines];
     lines[idx] = { ...lines[idx], [field]: value };
@@ -100,13 +119,31 @@ export default function InvoiceFormPage() {
     setFormData(prev => ({ ...prev, lines }));
   };
 
-  const addLine = () => { setFormData(prev => ({ ...prev, lines: [...prev.lines, { id: crypto.randomUUID(), itemId: '', itemName: '', quantity: 1, rate: 0, discount: 0, gstRate: 18, subtotal: 0, total: 0 }] })); };
-  const removeLine = (idx) => { setFormData(prev => ({ ...prev, lines: prev.lines.filter((_, i) => i !== idx) })); };
+  const addLine = () => {
+    setFormData(prev => ({ ...prev, lines: [...prev.lines, { id: crypto.randomUUID(), itemId: '', itemName: '', quantity: 1, rate: 0, discount: 0, gstRate: 18, hsnSac: '', subtotal: 0, total: 0 }] }));
+  };
+  const removeLine = (idx) => {
+    setFormData(prev => ({ ...prev, lines: prev.lines.filter((_, i) => i !== idx) }));
+  };
 
-  const computeTotals = () => { const subtotal = formData.lines.reduce((s, l) => s + (l.subtotal || 0), 0); const taxAmount = formData.lines.reduce((s, l) => s + ((l.subtotal || 0) * (l.gstRate || 0) / 100), 0); const discountAmount = formData.lines.reduce((s, l) => s + (l.discount || 0), 0); return { subtotal, taxAmount, discountAmount, totalAmount: subtotal + taxAmount - discountAmount }; };
+  const computeTotals = () => {
+    const subtotal = formData.lines.reduce((s, l) => s + (Number(l.subtotal) || 0), 0);
+    const taxAmount = formData.lines.reduce((s, l) => s + (Number(l.subtotal || 0) * (Number(l.gstRate) || 0) / 100), 0);
+    const discountAmount = formData.lines.reduce((s, l) => s + (Number(l.discount) || 0), 0);
+    const totalAmount = subtotal + taxAmount - discountAmount;
+    return { subtotal, taxAmount, discountAmount, totalAmount };
+  };
 
   async function handleSubmit(e) {
     e.preventDefault();
+    const errors = {};
+    if (!formData.customerId) errors.customerId = 'Customer is required';
+    const invalidLine = formData.lines.find(l => !l.itemId);
+    if (invalidLine) errors.lines = 'All lines must have an item selected';
+    if (formData.lines.length === 0) errors.lines = 'Add at least one line item';
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) { setError('Please fix the errors below'); return; }
+
     setLoading(true);
     setError('');
     try {
@@ -139,6 +176,7 @@ export default function InvoiceFormPage() {
     <div style={{ padding: 'var(--spacing-xl)', maxWidth: '1200px' }}>
       <h1 style={{ marginBottom: 'var(--spacing-lg)' }}>{isEdit ? 'Edit Invoice' : 'New Invoice'}</h1>
       {error && <div className="alert alert-error">{error}</div>}
+      {fieldErrors.lines && <div className="alert alert-error">{fieldErrors.lines}</div>}
 
       <form onSubmit={handleSubmit}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--spacing-md)', marginBottom: 'var(--spacing-md)' }}>
@@ -159,6 +197,7 @@ export default function InvoiceFormPage() {
               <option value="">-- Select Customer --</option>
               {customers.map(c => <option key={c.id} value={c.id}>{c.name || c.full_name}</option>)}
             </select>
+            {fieldErrors.customerId && <div className="alert alert-error" style={{ marginTop: '4px', padding: '6px 8px', fontSize: '0.85em' }}>{fieldErrors.customerId}</div>}
           </div>
           <div className="form-group">
             <label>Shipping Address</label>
@@ -192,21 +231,28 @@ export default function InvoiceFormPage() {
 
         <h4 style={{ marginTop: 'var(--spacing-lg)' }}>Line Items</h4>
         <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 'var(--spacing-md)' }}>
-           <thead><tr style={{ borderBottom: '2px solid var(--color-border)' }}>
-             <th style={{ textAlign: 'left', padding: 'var(--spacing-sm)', minWidth: '180px' }}>Item</th>
-             <th style={{ textAlign: 'left', padding: 'var(--spacing-sm)', width: '80px' }}>HSN</th>
-             <th style={{ textAlign: 'right', padding: 'var(--spacing-sm)', width: '70px' }}>Qty</th>
-             <th style={{ textAlign: 'right', padding: 'var(--spacing-sm)', width: '90px' }}>Rate</th>
-             <th style={{ textAlign: 'right', padding: 'var(--spacing-sm)', width: '80px' }}>Disc</th>
-             <th style={{ textAlign: 'right', padding: 'var(--spacing-sm)', width: '70px' }}>GST %</th>
-             <th style={{ textAlign: 'right', padding: 'var(--spacing-sm)', width: '100px' }}>Total</th>
-             <th style={{ padding: 'var(--spacing-sm)', width: '40px' }}></th>
-           </tr></thead>
+          <thead>
+            <tr style={{ borderBottom: '2px solid var(--color-border)' }}>
+              <th style={{ textAlign: 'left', padding: 'var(--spacing-sm)', minWidth: '220px' }}>Item</th>
+              <th style={{ textAlign: 'left', padding: 'var(--spacing-sm)', width: '80px' }}>HSN</th>
+              <th style={{ textAlign: 'right', padding: 'var(--spacing-sm)', width: '70px' }}>Qty</th>
+              <th style={{ textAlign: 'right', padding: 'var(--spacing-sm)', width: '90px' }}>Rate</th>
+              <th style={{ textAlign: 'right', padding: 'var(--spacing-sm)', width: '80px' }}>Disc</th>
+              <th style={{ textAlign: 'right', padding: 'var(--spacing-sm)', width: '70px' }}>GST %</th>
+              <th style={{ textAlign: 'right', padding: 'var(--spacing-sm)', width: '100px' }}>Total</th>
+              <th style={{ padding: 'var(--spacing-sm)', width: '40px' }}></th>
+            </tr>
+          </thead>
           <tbody>
             {formData.lines.map((line, idx) => (
               <tr key={line.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
-                 <td style={{ padding: 'var(--spacing-sm)' }}><input type="text" value={line.itemName || ''} onChange={(e) => handleLineChange(idx, 'itemName', e.target.value)} placeholder="Item name" /></td>
-                 <td style={{ padding: 'var(--spacing-sm)' }}><input type="text" value={line.hsnSac || ''} onChange={(e) => handleLineChange(idx, 'hsnSac', e.target.value)} placeholder="HSN" style={{ width: '70px' }} /></td>
+                <td style={{ padding: 'var(--spacing-sm)' }}>
+                  <select value={line.itemId} onChange={(e) => handleItemSelect(idx, e.target.value)} required style={{ width: '100%', padding: '10px 12px', border: '1px solid var(--color-border)', borderRadius: '6px' }}>
+                    <option value="">-- Select Item --</option>
+                    {items.map(i => <option key={i.id} value={i.id}>{i.name} {i.sku ? `(${i.sku})` : ''}</option>)}
+                  </select>
+                </td>
+                <td style={{ padding: 'var(--spacing-sm)' }}><input type="text" value={line.hsnSac || ''} onChange={(e) => handleLineChange(idx, 'hsnSac', e.target.value)} placeholder="HSN" style={{ width: '70px' }} /></td>
                 <td style={{ padding: 'var(--spacing-sm)' }}><input type="number" value={line.quantity} onChange={(e) => handleLineChange(idx, 'quantity', Number(e.target.value))} min="1" style={{ textAlign: 'right' }} /></td>
                 <td style={{ padding: 'var(--spacing-sm)' }}><input type="number" value={line.rate} onChange={(e) => handleLineChange(idx, 'rate', Number(e.target.value))} min="0" step="0.01" style={{ textAlign: 'right' }} /></td>
                 <td style={{ padding: 'var(--spacing-sm)' }}><input type="number" value={line.discount} onChange={(e) => handleLineChange(idx, 'discount', Number(e.target.value))} min="0" step="0.01" style={{ textAlign: 'right' }} /></td>
@@ -222,10 +268,10 @@ export default function InvoiceFormPage() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 200px', gap: 'var(--spacing-md)', marginTop: 'var(--spacing-lg)' }}>
           <div className="form-group"><label htmlFor="notes">Notes</label><textarea id="notes" name="notes" value={formData.notes} onChange={handleChange} rows="3" /></div>
           <div style={{ border: '1px solid var(--color-border)', padding: 'var(--spacing-md)' }}>
-            <p style={{ display: 'flex', justifyContent: 'space-between' }}><span>Subtotal:</span> <strong>₹{totals.subtotal.toFixed(2)}</strong></p>
-            <p style={{ display: 'flex', justifyContent: 'space-between' }}><span>Tax:</span> <strong>₹{totals.taxAmount.toFixed(2)}</strong></p>
-            <p style={{ display: 'flex', justifyContent: 'space-between' }}><span>Discount:</span> <strong>-₹{totals.discountAmount.toFixed(2)}</strong></p>
-            <p style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.2em' }}><span>Total:</span> <strong>₹{totals.totalAmount.toFixed(2)}</strong></p>
+            <p style={{ display: 'flex', justifyContent: 'space-between' }}><span>Subtotal:</span> <strong>₹{(totals.subtotal || 0).toFixed(2)}</strong></p>
+            <p style={{ display: 'flex', justifyContent: 'space-between' }}><span>Tax:</span> <strong>₹{(totals.taxAmount || 0).toFixed(2)}</strong></p>
+            <p style={{ display: 'flex', justifyContent: 'space-between' }}><span>Discount:</span> <strong>-₹{(totals.discountAmount || 0).toFixed(2)}</strong></p>
+            <p style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.2em' }}><span>Total:</span> <strong>₹{(totals.totalAmount || 0).toFixed(2)}</strong></p>
           </div>
         </div>
 

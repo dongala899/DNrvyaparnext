@@ -11,6 +11,7 @@ export const AddressSchema = z.object({
 
 export const CustomerSchema = z.object({
   id: z.string().min(1),
+  companyId: z.string().optional(),
   name: z.string().min(1, 'Customer name is required'),
   email: z.string().email().optional().or(z.literal('')),
   phone: z.string().optional(),
@@ -40,4 +41,8 @@ export function createAddress(data) {
 
 export function createCustomerListParams(data) {
   return CustomerListParamsSchema.parse(data);
+}
+
+export function getCompanyId(sharedState) {
+  return sharedState.getState().currentCompany?.id;
 }

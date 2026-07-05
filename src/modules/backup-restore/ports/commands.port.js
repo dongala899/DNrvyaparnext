@@ -46,6 +46,15 @@ export function registerCommands(commandBus, service) {
     }
   });
 
+  commandBus.handle('backup:runMigration', async (payload) => {
+    try {
+      const result = await service.runOldAppMigration(payload.sourcePath);
+      return { success: true, data: result };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  });
+
   commandBus.handle('data:exportCsv', async (payload) => {
     try {
       const result = await service.exportCsv(payload.entityType);
@@ -66,6 +75,6 @@ export function registerCommands(commandBus, service) {
 }
 
 export function unregisterCommands(commandBus) {
-  const commands = ['backup:create', 'backup:restore', 'backup:exportJson', 'backup:importJson', 'migration:runOldApp'];
+  const commands = ['backup:create', 'backup:restore', 'backup:exportJson', 'backup:importJson', 'migration:runOldApp', 'backup:runMigration'];
   commands.forEach(cmd => commandBus.removeHandler(cmd));
 }

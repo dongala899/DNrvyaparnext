@@ -20,6 +20,40 @@ export default function InvoiceDetailPage() {
     finally { setLoading(false); }
   }
 
+  async function handlePrint() {
+    try {
+      const commandBus = window.__shell?.commandBus;
+      const sharedState = window.__shell?.sharedState;
+      const state = sharedState?.getState?.() || {};
+      const currentCompany = state.currentCompany || {};
+      const docData = {
+        invoiceNumber: invoice.invoiceNumber,
+        date: invoice.date,
+        customerName: invoice.customerName,
+        lines: invoice.lines || [],
+        subtotal: invoice.subtotal,
+        taxAmount: invoice.taxAmount,
+        discountAmount: invoice.discountAmount,
+        totalAmount: invoice.totalAmount,
+        status: invoice.status,
+        notes: invoice.notes,
+        terms: invoice.terms,
+        companyName: currentCompany?.name || '',
+        companyAddress: currentCompany?.address || currentCompany?.address_line1 || '',
+        companyGSTIN: currentCompany?.gstin || '',
+        companyPhone: currentCompany?.phone || '',
+        companyBankName: currentCompany?.bank_name || '',
+        companyBankAccount: currentCompany?.bank_account || '',
+        companyBankIFSC: currentCompany?.bank_ifsc || '',
+        partyGSTIN: invoice.customerGstin || '',
+      };
+      const result = await commandBus.invoke('print:exportDocument', { type: 'invoice', data: docData });
+      if (!result.success) {
+        setError(result.error || 'Print failed');
+      }
+    } catch (err) { setError(err.message); }
+  }
+
   if (loading) return <div style={{ padding: 'var(--spacing-xl)' }}><p>Loading...</p></div>;
   if (error) return <div style={{ padding: 'var(--spacing-xl)' }}><p className="alert alert-error">{error}</p></div>;
   if (!invoice) return <div style={{ padding: 'var(--spacing-xl)' }}><p>Invoice not found</p></div>;
@@ -34,6 +68,7 @@ export default function InvoiceDetailPage() {
         </div>
         <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
           {invoice.status !== 'cancelled' && invoice.status !== 'confirmed' && <Link to={`/invoices/${invoice.id}/edit`} className="btn btn-primary">Edit</Link>}
+          <button onClick={handlePrint} className="btn btn-primary">Print / PDF</button>
           <Link to="/invoices" className="btn btn-secondary">Back to List</Link>
         </div>
       </div>

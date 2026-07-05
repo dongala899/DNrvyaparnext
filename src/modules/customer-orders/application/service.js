@@ -1,4 +1,4 @@
-import { createCustomerOrder, createOrderLine } from '../domain/entities.js';
+import { createCustomerOrder, createOrderLine, getCompanyId } from '../domain/entities.js';
 import { CustomerOrderNotFoundError, CustomerOrderConversionError } from '../domain/errors.js';
 
 export class CustomerOrderService {
@@ -9,6 +9,10 @@ export class CustomerOrderService {
     this.logger = logger;
     this.sharedState = sharedState;
     this.store = { items: [], setItems: (items) => { this.store.items = items; } };
+  }
+
+  companyId() {
+    return getCompanyId(this.sharedState);
   }
 
   generateOrderNumber() {
@@ -42,6 +46,7 @@ export class CustomerOrderService {
     const order = createCustomerOrder({
       ...data,
       id: crypto.randomUUID(),
+      companyId: this.companyId(),
       orderNumber,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -100,7 +105,7 @@ export class CustomerOrderService {
     await this.storage.runQuery({
       type: 'update',
       table: 'customer_orders',
-      where: { id },
+      where: { id, company_id: this.companyId() },
       values: this.toDbRow(updated),
     });
 
@@ -134,9 +139,10 @@ export class CustomerOrderService {
   }
 
   async findById(id) {
+    const cid = this.companyId();
     const result = await this.storage.runQuery({
       table: 'customer_orders',
-      where: { id },
+      where: cid ? { id, company_id: cid } : { id },
       limit: 1,
     });
     const row = result?.data?.[0];
@@ -164,22 +170,17 @@ export class CustomerOrderService {
 
   async getList(params = {}) {
     const { status, customerId, search, limit = 50, offset = 0 } = params;
-    let sql = 'SELECT * FROM customer_orders WHERE 1=1';
+    const cid = this.companyId();
+    let sql = 'SELECT * FROM customer_orders';
     const values = [];
+    const whereClauses = [];
 
-    if (status && status !== 'all') {
-      sql += ' AND status = ?';
-      values.push(status);
-    }
-    if (customerId) {
-      sql += ' AND customer_id = ?';
-      values.push(customerId);
-    }
-    if (search) {
-      sql += ' AND (order_number LIKE ? OR customer_name LIKE ?)';
-      values.push(`%${search}%`, `%${search}%`);
-    }
+    if (cid) whereClauses.push('company_id = ?'), values.push(cid);
+    if (status && status !== 'all') whereClauses.push('status = ?'), values.push(status);
+    if (customerId) whereClauses.push('customer_id = ?'), values.push(customerId);
+    if (search) whereClauses.push('(order_number LIKE ? OR customer_name LIKE ?)'), values.push(`%${search}%`, `%${search}%`);
 
+    if (whereClauses.length > 0) sql += ' WHERE ' + whereClauses.join(' AND ');
     sql += ' ORDER BY order_date DESC, created_at DESC LIMIT ? OFFSET ?';
     values.push(limit, offset);
 
@@ -196,7 +197,8 @@ export class CustomerOrderService {
     }
 
     await this.storage.runQuery({ type: 'delete', table: 'customer_order_lines', where: { order_id: id } });
-    await this.storage.runQuery({ type: 'delete', table: 'customer_orders', where: { id } });
+    const cid = this.companyId();
+    await this.storage.runQuery({ type: 'delete', table: 'customer_orders', where: cid ? { id, company_id: cid } : { id } });
 
     this.store.items = this.store.items.filter(o => o.id !== id);
     this.eventBus.emit('customerOrder:deleted', { id });
@@ -245,6 +247,7 @@ export class CustomerOrderService {
   toDbRow(order) {
     return {
       id: order.id,
+      company_id: order.companyId,
       order_number: order.orderNumber,
       customer_id: order.customerId,
       customer_name: order.customerName || null,
@@ -272,6 +275,7 @@ export class CustomerOrderService {
   fromDbRow(row, lines) {
     return createCustomerOrder({
       id: row.id,
+      companyId: row.company_id || undefined,
       orderNumber: row.order_number,
       customerId: row.customer_id,
       customerName: row.customer_name || undefined,

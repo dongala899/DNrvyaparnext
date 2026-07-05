@@ -132,7 +132,9 @@ const handlers = {
       const safeName = (title || 'document').replace(/[^a-zA-Z0-9_-]/g, '_');
       const fileName = `${safeName}_${Date.now()}.pdf`;
       const filePath = path.join(DOWNLOADS_DIR, fileName);
-      return await generatePdf(docData, filePath);
+      await generatePdf(docData, filePath);
+      const buffer = fs.readFileSync(filePath);
+      return { success: true, filePath, fileName: path.basename(filePath), data: buffer.toString('base64') };
     } catch (error) {
       return { success: false, error: error.message };
     }
@@ -194,6 +196,13 @@ const handlers = {
     }
   },
   'storage:migrationRun': async (payload = {}) => {
+    try {
+      return await storage.migration.runOldApp(payload.sourcePath);
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  },
+  'backup:runMigration': async (payload = {}) => {
     try {
       return await storage.migration.runOldApp(payload.sourcePath);
     } catch (error) {

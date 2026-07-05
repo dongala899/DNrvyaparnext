@@ -1,4 +1,4 @@
-import { createQuotation, createLineItem } from '../domain/entities.js';
+import { createQuotation, createLineItem, getCompanyId } from '../domain/entities.js';
 import { QuotationNotFoundError } from '../domain/errors.js';
 
 function getFinancialYearLabel(dateValue) {
@@ -20,6 +20,10 @@ export class QuotationService {
     this.logger = logger;
     this.sharedState = sharedState;
     this.store = { items: [], setItems: (items) => { this.store.items = items; } };
+  }
+
+  companyId() {
+    return getCompanyId(this.sharedState);
   }
 
   generateQuotationNumber(customerCode, dateValue) {
@@ -61,6 +65,7 @@ export class QuotationService {
     const quotation = createQuotation({
       ...data,
       id: crypto.randomUUID(),
+      companyId: this.companyId(),
       quotationNumber: data.quotationNumber || this.generateQuotationNumber(data.customerCode, data.date),
       date: data.date || new Date().toISOString(),
       lines,
@@ -74,7 +79,7 @@ export class QuotationService {
       quotation_number: quotation.quotationNumber,
       customer_id: quotation.customerId,
       customer_name: quotation.customerName || null,
-      company_id: quotation.companyId || null,
+      company_id: quotation.companyId,
       date: quotation.date,
       validity_date: quotation.validityDate || null,
       subtotal: quotation.subtotal,
@@ -118,6 +123,7 @@ export class QuotationService {
       ...existing,
       ...data,
       id,
+      companyId: this.companyId(),
       lines,
       ...totals,
       updatedAt: new Date().toISOString(),
@@ -127,7 +133,7 @@ export class QuotationService {
       quotation_number: quotation.quotationNumber,
       customer_id: quotation.customerId,
       customer_name: quotation.customerName || null,
-      company_id: quotation.companyId || null,
+      company_id: quotation.companyId,
       date: quotation.date,
       validity_date: quotation.validityDate || null,
       subtotal: quotation.subtotal,
@@ -152,19 +158,20 @@ export class QuotationService {
     return { success: true, data: quotation };
   }
 
-  async delete(id) {
+async delete(id) {
     this.logger.info('Deleting quotation', id);
     const existing = await this.findById(id);
     if (!existing) throw new QuotationNotFoundError(id);
-
+    const cid = this.companyId();
     await this.storage.runQuery({ type: 'delete', table: 'quotation_lines', where: { quotation_id: id } });
-    await this.storage.runQuery({ type: 'delete', table: 'quotations', where: { id } });
+    await this.storage.runQuery({ type: 'delete', table: 'quotations', where: cid ? { id, company_id: cid } : { id } });
     this.eventBus.emit('quotation:deleted', { id });
     return { success: true };
   }
 
   async findById(id) {
-    const result = await this.storage.runQuery({ table: 'quotations', where: { id }, limit: 1 });
+    const cid = this.companyId();
+    const result = await this.storage.runQuery({ table: 'quotations', where: cid ? { id, company_id: cid } : { id }, limit: 1 });
     const row = result?.data?.[0];
     if (!row) return null;
 
@@ -187,12 +194,15 @@ export class QuotationService {
 
   async getList(params = {}) {
     const { search, status, customerId, limit = 50, offset = 0 } = params;
-    let sql = 'SELECT * FROM quotations WHERE 1=1';
+    const cid = this.companyId();
+    let sql = 'SELECT * FROM quotations';
     const whereValues = [];
-
-    if (search) { sql += ' AND (quotation_number LIKE ? OR customer_name LIKE ?)'; whereValues.push(`%${search}%`, `%${search}%`); }
-    if (status && status !== 'all') { sql += ' AND status = ?'; whereValues.push(status); }
-    if (customerId) { sql += ' AND customer_id = ?'; whereValues.push(customerId); }
+    const whereClauses = [];
+    if (cid) whereClauses.push('company_id = ?'), whereValues.push(cid);
+    if (search) whereClauses.push('(quotation_number LIKE ? OR customer_name LIKE ?)'), whereValues.push(`%${search}%`, `%${search}%`);
+    if (status && status !== 'all') whereClauses.push('status = ?'), whereValues.push(status);
+    if (customerId) whereClauses.push('customer_id = ?'), whereValues.push(customerId);
+    if (whereClauses.length > 0) sql += ' WHERE ' + whereClauses.join(' AND ');
     sql += ' ORDER BY date DESC LIMIT ? OFFSET ?';
     whereValues.push(limit, offset);
 

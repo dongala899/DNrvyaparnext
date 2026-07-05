@@ -37,6 +37,7 @@ export function createBrowserApi() {
         export: { json: (payload) => invokeRemote('storage:exportJson', payload) },
         import: { json: (payload) => invokeRemote('storage:importJson', payload) },
         migration: { runOldApp: (payload) => invokeRemote('storage:migrationRun', payload) },
+        runMigration: (payload) => invokeRemote('backup:runMigration', payload),
       },
     },
     dialog: {
@@ -45,7 +46,29 @@ export function createBrowserApi() {
       showMessageBox: (payload) => Promise.resolve(localHandler('dialog:messageBox', payload)),
     },
     print: {
-      savePdf: (payload) => invokeRemote('print:savePdf', payload),
+      savePdf: (payload) => invokeRemote('print:savePdf', payload).then((result) => {
+        if (result?.success && result?.data) {
+          try {
+            const binary = typeof atob === 'function' ? atob(result.data) : Buffer.from(result.data, 'base64').toString('binary');
+            const bytes = new Uint8Array(binary.length);
+            for (let i = 0; i < binary.length; i++) {
+              bytes[i] = binary.charCodeAt(i);
+            }
+            const blob = new Blob([bytes.buffer], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = result.fileName || 'document.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+          } catch (error) {
+            console.error('[BrowserApi] PDF download failed:', error);
+          }
+        }
+        return result;
+      }),
       send: (payload) => invokeRemote('print:send', payload),
       getPrinters: (payload) => invokeRemote('print:getPrinters', payload),
     },

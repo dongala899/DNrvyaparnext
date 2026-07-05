@@ -60,5 +60,8 @@
     "vite": "^6.0.0",
     "vitest": "^4.1.9",
     "wait-on": "^8.0.0"
+  },
+  "allowScripts": {
+    "electron@28.3.3": true
   }
 }

@@ -1,4 +1,4 @@
-import { createCartLine, createPosState } from '../domain/entities.js';
+import { createCartLine, createPosState, getCompanyId } from '../domain/entities.js';
 
 export class PosService {
   constructor({ storage, commandBus, eventBus, logger, sharedState }) {
@@ -10,17 +10,32 @@ export class PosService {
     this.cart = createPosState({});
   }
 
+  companyId() {
+    return getCompanyId(this.sharedState);
+  }
+
   getCart() { return this.cart; }
 
-  addLine(itemId, quantity, rate, discount = 0, gstRate = 18) {
+  async addLine(itemId, quantity, rate, discount = 0, gstRate = 18, itemName = '') {
     const existing = this.cart.lines.find(l => l.itemId === itemId);
     if (existing) {
       existing.quantity += quantity;
       existing.rate = rate;
       existing.discount = discount;
       existing.gstRate = gstRate;
+      if (itemName && !existing.itemName) {
+        existing.itemName = itemName;
+      }
     } else {
-      this.cart.lines.push(createCartLine({ id: crypto.randomUUID(), itemId, quantity, rate, discount, gstRate }));
+      this.cart.lines.push(createCartLine({
+        id: crypto.randomUUID(),
+        itemId,
+        itemName,
+        quantity,
+        rate,
+        discount,
+        gstRate,
+      }));
     }
     this.updateTotals();
     this.eventBus.emit('pos:cartUpdated', { cart: this.cart });
@@ -86,7 +101,11 @@ export class PosService {
       invoiceNumber: '',
       customerId: this.cart.customerId || undefined,
       customerName: this.cart.customerName || undefined,
-      lines: this.cart.lines.map(l => ({ ...l })),
+      date: new Date().toISOString().split('T')[0],
+      lines: this.cart.lines.map(l => ({
+        ...l,
+        itemName: l.itemName || undefined,
+      })),
       subtotal: totals.subtotal,
       taxAmount: totals.taxAmount,
       discountAmount: totals.discountAmount,

@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const LineItemSchema = z.object({
   id: z.string().min(1),
-  itemId: z.string().min(1),
+  itemId: z.string().optional(),
   itemName: z.string().optional(),
   quantity: z.number().min(1),
   rate: z.number().min(0),
@@ -14,10 +14,10 @@ export const LineItemSchema = z.object({
 
 export const QuotationSchema = z.object({
   id: z.string().min(1),
+  companyId: z.string().optional(),
   quotationNumber: z.string().min(1),
   customerId: z.string().min(1),
   customerName: z.string().optional(),
-  companyId: z.string().optional(),
   date: z.string().min(1),
   validityDate: z.string().optional(),
   lines: z.array(LineItemSchema),
@@ -55,3 +55,7 @@ export function createLineItem(data) {
   });
 }
 export function createQuotationListParams(data) { return QuotationListParamsSchema.parse(data); }
+
+export function getCompanyId(sharedState) {
+  return sharedState.getState().currentCompany?.id;
+}

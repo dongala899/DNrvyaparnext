@@ -19,6 +19,7 @@ export default function CustomerOrderFormPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(isEdit);
+  const [fieldErrors, setFieldErrors] = useState({});
 
   useEffect(() => { loadDependencies(); if (isEdit) loadOrder(); else generateNumber(); }, []);
 
@@ -91,6 +92,18 @@ export default function CustomerOrderFormPage() {
     e.preventDefault();
     setSaving(true);
     setError('');
+    setFieldErrors({});
+    const errors = {};
+    if (!customerId) errors.customerId = 'Customer is required';
+    const validLines = lines.filter(l => l.itemId);
+    if (validLines.length === 0) errors.lines = 'At least one line item with an item selection is required';
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setSaving(false);
+      return;
+    }
+
     try {
       const bus = window.__shell?.commandBus;
       const customer = customers.find(c => c.id === customerId);
@@ -146,6 +159,7 @@ export default function CustomerOrderFormPage() {
               <option value="">Select customer</option>
               {customers.map(c => <option key={c.id} value={c.id}>{c.name || c.full_name}</option>)}
             </select>
+            {fieldErrors.customerId && <div className="alert alert-error" style={{marginTop:'4px',padding:'6px 8px',fontSize:'0.85em'}}>{fieldErrors.customerId}</div>}
           </div>
           <div className="form-group">
             <label>Order Date *</label>
@@ -201,6 +215,7 @@ export default function CustomerOrderFormPage() {
           </tbody>
         </table>
         <button type="button" onClick={addLine} className="btn" style={{ marginBottom: 'var(--spacing-lg)' }}>Add Line Item</button>
+        {fieldErrors.lines && <div className="alert alert-error" style={{marginTop:'4px',padding:'6px 8px',fontSize:'0.85em'}}>{fieldErrors.lines}</div>}
 
         <div className="form-group">
           <label>Notes</label>

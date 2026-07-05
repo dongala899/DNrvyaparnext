@@ -15,6 +15,7 @@ export const PurchaseLineSchema = z.object({
 
 export const PurchaseSchema = z.object({
   id: z.string().min(1),
+  companyId: z.string().optional(),
   billNumber: z.string().min(1),
   vendorId: z.string().min(1),
   vendorName: z.string().optional(),
@@ -35,3 +36,7 @@ export const PurchaseSchema = z.object({
 
 export function createPurchaseLine(data) { return PurchaseLineSchema.parse(data); }
 export function createPurchase(data) { return PurchaseSchema.parse(data); }
+
+export function getCompanyId(sharedState) {
+  return sharedState.getState().currentCompany?.id;
+}

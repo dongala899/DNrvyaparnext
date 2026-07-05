@@ -30,7 +30,7 @@ export class LicenseService {
       throw new InvalidLicenseError('License key is empty');
     }
 
-    const result = await this.ipc.license.validate({ key });
+    const result = await this.ipc.license.validateKey({ key });
 
     if (!result.success || !result.data?.valid) {
       this.eventBus.emit('license:validation:failed', { key });

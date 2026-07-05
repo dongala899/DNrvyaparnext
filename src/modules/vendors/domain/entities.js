@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export const VendorSchema = z.object({
   id: z.string().min(1),
+  companyId: z.string().optional(),
   name: z.string().min(1, 'Vendor name is required'),
   email: z.string().email().optional().or(z.literal('')),
   phone: z.string().optional(),
@@ -22,4 +23,8 @@ export const VendorSchema = z.object({
 
 export function createVendor(data) {
   return VendorSchema.parse(data);
+}
+
+export function getCompanyId(sharedState) {
+  return sharedState.getState().currentCompany?.id;
 }

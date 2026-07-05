@@ -11,6 +11,7 @@ export default function PoFormPage() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => { if (isEdit) loadPo(); }, [id]);
@@ -53,6 +54,19 @@ export default function PoFormPage() {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setFieldErrors({});
+    const errors = {};
+    if (!formData.vendorId) errors.vendorId = 'Vendor is required';
+    if (!formData.date) errors.date = 'Date is required';
+    const validLines = formData.lines.filter(l => l.itemId);
+    if (validLines.length === 0) errors.lines = 'At least one line item with an item selection is required';
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setLoading(false);
+      return;
+    }
+
     try {
       const commandBus = window.__shell?.commandBus;
       const payload = { ...formData, lines: formData.lines.map(l => ({ ...l, subtotal: l.subtotal || 0, total: l.total || 0 })) };
@@ -75,12 +89,23 @@ export default function PoFormPage() {
       <form onSubmit={handleSubmit}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--spacing-md)' }}>
           <div className="form-group"><label htmlFor="poNumber">PO # *</label><input type="text" id="poNumber" name="poNumber" value={formData.poNumber} onChange={handleChange} required /></div>
-          <div className="form-group"><label htmlFor="date">Date *</label><input type="date" id="date" name="date" value={formData.date} onChange={handleChange} required /></div>
-          <div className="form-group"><label htmlFor="expectedDate">Expected Date</label><input type="date" id="expectedDate" name="expectedDate" value={formData.expectedDate} onChange={handleChange} /></div>
+          <div className="form-group">
+            <label htmlFor="date">Date *</label>
+            <input type="date" id="date" name="date" value={formData.date} onChange={handleChange} required />
+            {fieldErrors.date && <div className="alert alert-error" style={{marginTop:'4px',padding:'6px 8px',fontSize:'0.85em'}}>{fieldErrors.date}</div>}
+          </div>
+          <div className="form-group">
+            <label htmlFor="expectedDate">Expected Date</label>
+            <input type="date" id="expectedDate" name="expectedDate" value={formData.expectedDate} onChange={handleChange} />
+          </div>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--spacing-md)' }}>
-          <div className="form-group"><label htmlFor="vendorId">Vendor ID *</label><input type="text" id="vendorId" name="vendorId" value={formData.vendorId} onChange={handleChange} required /></div>
+          <div className="form-group">
+            <label htmlFor="vendorId">Vendor ID *</label>
+            <input type="text" id="vendorId" name="vendorId" value={formData.vendorId} onChange={handleChange} required />
+            {fieldErrors.vendorId && <div className="alert alert-error" style={{marginTop:'4px',padding:'6px 8px',fontSize:'0.85em'}}>{fieldErrors.vendorId}</div>}
+          </div>
           <div className="form-group"><label htmlFor="vendorName">Vendor Name</label><input type="text" id="vendorName" name="vendorName" value={formData.vendorName} onChange={handleChange} readOnly /></div>
         </div>
 
@@ -106,6 +131,7 @@ export default function PoFormPage() {
           </tbody>
         </table>
         <button type="button" onClick={addLine} className="btn btn-secondary">+ Add Line</button>
+        {fieldErrors.lines && <div className="alert alert-error" style={{marginTop:'4px',padding:'6px 8px',fontSize:'0.85em'}}>{fieldErrors.lines}</div>}
 
         <div className="form-group"><label htmlFor="notes">Notes</label><textarea id="notes" name="notes" value={formData.notes} onChange={handleChange} rows="2" /></div>
 

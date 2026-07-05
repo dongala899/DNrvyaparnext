@@ -8,6 +8,7 @@ export default function GrnFormPage() {
   const [formData, setFormData] = useState({ poId: id && id !== 'new' ? id : '', lines: [], notes: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => { if (formData.poId) loadPo(); }, [formData.poId]);
@@ -31,6 +32,17 @@ export default function GrnFormPage() {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setFieldErrors({});
+    const errors = {};
+    if (!formData.poId) errors.poId = 'PO ID is required';
+    if (!formData.lines || formData.lines.length === 0) errors.lines = 'At least one line is required';
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setLoading(false);
+      return;
+    }
+
     try {
       const commandBus = window.__shell?.commandBus;
       const result = await commandBus.invoke('po:createGrn', { poId: formData.poId, data: { lines: formData.lines, notes: formData.notes } });
@@ -51,6 +63,7 @@ export default function GrnFormPage() {
         <div className="form-group">
           <label htmlFor="poId">PO ID *</label>
           <input type="text" id="poId" name="poId" value={formData.poId} onChange={(e) => setFormData(prev => ({ ...prev, poId: e.target.value }))} required disabled={!isNew} />
+          {fieldErrors.poId && <div className="alert alert-error" style={{marginTop:'4px',padding:'6px 8px',fontSize:'0.85em'}}>{fieldErrors.poId}</div>}
         </div>
 
         {po && (
@@ -77,10 +90,12 @@ export default function GrnFormPage() {
                 <td style={{ textAlign: 'right', padding: 'var(--spacing-sm)' }}>₹{line.rate}</td>
               </tr>
             ))}
-          </tbody>
+                    </tbody>
         </table>
+        {fieldErrors.lines && <div className="alert alert-error" style={{marginTop:'4px',padding:'6px 8px',fontSize:'0.85em'}}>{fieldErrors.lines}</div>}
 
-        <div className="form-group"><label htmlFor="notes">Notes</label><textarea id="notes" name="notes" value={formData.notes} onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))} rows="2" /></div>
+        <div className="form-group"><label htmlFor="notes">Notes</label>
+<textarea id="notes" name="notes" value={formData.notes} onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))} rows="2" /></div>
 
         <div style={{ display: 'flex', gap: 'var(--spacing-md)', marginTop: 'var(--spacing-lg)' }}>
           <button type="submit" className="btn btn-primary" disabled={loading}>{loading ? 'Creating...' : 'Create GRN'}</button>

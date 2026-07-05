@@ -1,4 +1,4 @@
-import { createPayment } from '../domain/entities.js';
+import { createPayment, getCompanyId } from '../domain/entities.js';
 import { PaymentNotFoundError, OverpaymentError, InvalidPaymentStatusError } from '../domain/errors.js';
 
 export class PaymentService {
@@ -11,6 +11,10 @@ export class PaymentService {
     this.store = { items: [], setItems: (items) => { this.store.items = items; } };
   }
 
+  companyId() {
+    return getCompanyId(this.sharedState);
+  }
+
   async create(data) {
     this.logger.info('Creating payment', data.invoiceId);
     
@@ -20,7 +24,8 @@ export class PaymentService {
     }
     
     const inv = invoice.data;
-    const paidAlready = inv.payments ? inv.payments.reduce((s, p) => s + p.amount, 0) : 0;
+    const payments = await this.getList({ invoiceId: data.invoiceId });
+    const paidAlready = (payments.data || []).reduce((s, p) => s + p.amount, 0);
     const dueAmount = inv.totalAmount - paidAlready;
     
     if (data.amount > dueAmount) {
@@ -30,12 +35,14 @@ export class PaymentService {
     const payment = createPayment({
       ...data,
       id: crypto.randomUUID(),
+      companyId: this.companyId(),
       paymentDate: data.paymentDate || new Date().toISOString(),
       createdAt: new Date().toISOString(),
     });
 
     await this.storage.runQuery({ type: 'insert', table: 'payments', values: {
       id: payment.id,
+      company_id: payment.companyId,
       invoice_id: payment.invoiceId,
       customer_id: payment.customerId,
       amount: payment.amount,
@@ -71,17 +78,19 @@ export class PaymentService {
     this.logger.info('Deleting payment', id);
     const existing = await this.findById(id);
     if (!existing) throw new PaymentNotFoundError(id);
-    await this.storage.runQuery({ type: 'delete', table: 'payments', where: { id } });
+    const cid = this.companyId();
+    await this.storage.runQuery({ type: 'delete', table: 'payments', where: cid ? { id, company_id: cid } : { id } });
     this.eventBus.emit('payment:deleted', { id });
     return { success: true };
   }
 
   async findById(id) {
-    const result = await this.storage.runQuery({ table: 'payments', where: { id }, limit: 1 });
+    const cid = this.companyId();
+    const result = await this.storage.runQuery({ table: 'payments', where: cid ? { id, company_id: cid } : { id }, limit: 1 });
     const row = result?.data?.[0];
     if (!row) return null;
     return createPayment({
-      id: row.id, invoiceId: row.invoice_id, customerId: row.customer_id,
+      id: row.id, companyId: row.company_id, invoiceId: row.invoice_id, customerId: row.customer_id,
       amount: row.amount, paymentDate: row.payment_date, paymentMode: row.payment_mode,
       referenceNumber: row.reference_number || undefined, notes: row.notes || undefined,
       status: row.status, createdAt: row.created_at,
@@ -90,15 +99,19 @@ export class PaymentService {
 
   async getList(params = {}) {
     const { invoiceId, customerId, status, limit = 50, offset = 0 } = params;
-    let sql = 'SELECT * FROM payments WHERE 1=1';
+    const cid = this.companyId();
     const whereValues = [];
-    if (invoiceId) { sql += ' AND invoice_id = ?'; whereValues.push(invoiceId); }
-    if (customerId) { sql += ' AND customer_id = ?'; whereValues.push(customerId); }
-    if (status) { sql += ' AND status = ?'; whereValues.push(status); }
+    let sql = 'SELECT * FROM payments';
+    const whereClauses = [];
+    if (cid) whereClauses.push('company_id = ?'), whereValues.push(cid);
+    if (invoiceId) whereClauses.push('invoice_id = ?'), whereValues.push(invoiceId);
+    if (customerId) whereClauses.push('customer_id = ?'), whereValues.push(customerId);
+    if (status) whereClauses.push('status = ?'), whereValues.push(status);
+    if (whereClauses.length > 0) sql += ' WHERE ' + whereClauses.join(' AND ');
     sql += ' ORDER BY payment_date DESC LIMIT ? OFFSET ?';
     whereValues.push(limit, offset);
     const rows = await this.storage.runQuery({ type: 'custom', table: 'payments', sql, values: whereValues });
-    return { success: true, data: (rows?.data || []).map(row => createPayment({ id: row.id, invoiceId: row.invoice_id, customerId: row.customer_id, amount: row.amount, paymentDate: row.payment_date, paymentMode: row.payment_mode, referenceNumber: row.reference_number || undefined, notes: row.notes || undefined, status: row.status, createdAt: row.created_at })) };
+    return { success: true, data: (rows?.data || []).map(row => createPayment({ id: row.id, companyId: row.company_id, invoiceId: row.invoice_id, customerId: row.customer_id, amount: row.amount, paymentDate: row.payment_date, paymentMode: row.payment_mode, referenceNumber: row.reference_number || undefined, notes: row.notes || undefined, status: row.status, createdAt: row.created_at })) };
   }
 
   async updateInvoiceStatus(invoiceId) {

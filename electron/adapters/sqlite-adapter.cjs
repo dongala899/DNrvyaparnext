@@ -120,10 +120,12 @@ module.exports.createSqliteAdapter = function(app) {
 
     if (type === 'update') {
       const setColumns = Object.keys(values).map(k => `${k} = ?`);
-      const whereClause = where ? `WHERE ${Object.keys(where).map(k => `${k} = ?`).join(' AND ')}` : '';
+      const filteredWhere = where ? Object.entries(where).filter(([,v]) => v !== undefined) : [];
+      const whereClause = filteredWhere.length > 0 ? `WHERE ${filteredWhere.map(([k]) => `${k} = ?`).join(' AND ')}` : '';
       const sql = `UPDATE ${table} SET ${setColumns.join(', ')} ${whereClause}`;
       const stmt = database.prepare(sql);
-      stmt.run([...Object.values(values), ...Object.values(where || {})]);
+      const bindValues = [...Object.values(values), ...filteredWhere.map(([,v]) => v)];
+      stmt.run(bindValues);
       stmt.free();
       persistDb(getDbPath());
       const affected = database.getRowsModified();
@@ -131,10 +133,12 @@ module.exports.createSqliteAdapter = function(app) {
     }
 
     if (type === 'delete') {
-      const whereClause = where ? `WHERE ${Object.keys(where).map(k => `${k} = ?`).join(' AND ')}` : '';
+      const filteredWhere = where ? Object.entries(where).filter(([,v]) => v !== undefined) : [];
+      const whereClause = filteredWhere.length > 0 ? `WHERE ${filteredWhere.map(([k]) => `${k} = ?`).join(' AND ')}` : '';
       const sql = `DELETE FROM ${table} ${whereClause}`;
       const stmt = database.prepare(sql);
-      stmt.run(Object.values(where || {}));
+      if (filteredWhere.length > 0) stmt.run(filteredWhere.map(([,v]) => v));
+      else stmt.run();
       stmt.free();
       persistDb(getDbPath());
       const affected = database.getRowsModified();
@@ -161,12 +165,14 @@ module.exports.createSqliteAdapter = function(app) {
       return { success: true };
     }
 
-    const whereClause = where ? `WHERE ${Object.keys(where).map(k => `${k} = ?`).join(' AND ')}` : '';
+    const whereObj = where && typeof where === 'object' ? where : {};
+    const filteredWhere = Object.entries(whereObj).filter(([,v]) => v !== undefined);
+    const whereClause = filteredWhere.length > 0 ? `WHERE ${filteredWhere.map(([k]) => `${k} = ?`).join(' AND ')}` : '';
     const limitClause = limit ? `LIMIT ${limit}` : '';
     const orderClause = orderBy ? `ORDER BY ${orderBy.join(', ')}` : '';
     const selectSql = `SELECT * FROM ${table} ${whereClause} ${orderClause} ${limitClause}`.trim();
     const stmt = database.prepare(selectSql);
-    if (where) stmt.bind(Object.values(where));
+    if (filteredWhere.length > 0) stmt.bind(filteredWhere.map(([,v]) => v));
     const rows = [];
     while (stmt.step()) {
       const row = stmt.getAsObject();
@@ -210,25 +216,146 @@ module.exports.createSqliteAdapter = function(app) {
       return { success: true, data: { id: crypto.randomUUID(), filename, type, size: fs.statSync(destPath).size, createdAt: new Date().toISOString() } };
     },
     async restore(filename, type) {
+      const SQL = await loadSqlJs();
       const backupDir = path.join(process.cwd(), 'backups');
       const srcPath = path.join(backupDir, filename);
       if (!fs.existsSync(srcPath)) throw new Error('Backup file not found');
       const dbPath = getDbPath();
       fs.copyFileSync(srcPath, dbPath);
+      dbBuffer = fs.readFileSync(dbPath);
+      db = new SQL.Database(dbBuffer);
+      db.run('PRAGMA foreign_keys = ON');
       return { success: true };
     },
   };
 
   const export_ = {
     async json() {
-      return { success: true, filePath: path.join(process.cwd(), 'exports', `export_${Date.now()}.json`) };
+      const database = getDb();
+      const tables = Array.from(TABLE_WHITELIST).filter(t => t !== 'migrations');
+      const data = {};
+      for (const table of tables) {
+        try {
+          const stmt = database.prepare(`SELECT * FROM ${table}`);
+          const rows = [];
+          while (stmt.step()) {
+            rows.push(stmt.getAsObject());
+          }
+          stmt.free();
+          data[table] = rows;
+        } catch (e) {
+          data[table] = [];
+        }
+      }
+      const exportDir = path.join(process.cwd(), 'exports');
+      if (!fs.existsSync(exportDir)) fs.mkdirSync(exportDir, { recursive: true });
+      const filename = `export_${new Date().toISOString().slice(0, 10)}_${crypto.randomUUID().slice(0, 8)}.json`;
+      const filePath = path.join(exportDir, filename);
+      fs.writeFileSync(filePath, JSON.stringify({ exportedAt: new Date().toISOString(), data }, null, 2), 'utf8');
+      return { success: true, filePath };
     },
   };
 
-  const import_ = {
+const import_ = {
     async json(filePath) {
-      if (!fs.existsSync(filePath)) throw new Error('File not found');
-      return { success: true, data: JSON.parse(fs.readFileSync(filePath, 'utf8')) };
+      const database = getDb();
+      if (!fs.existsSync(filePath)) throw new Error('File not found: ' + filePath);
+      const raw = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      
+      let tables = this._convertV2ToTableFormat(raw);
+      if (!tables) {
+        tables = raw.data || raw;
+      }
+      
+      let imported = 0;
+      for (const [table, rows] of Object.entries(tables)) {
+        if (!TABLE_WHITELIST.has(table)) { console.log('[Import] Skipping non-whitelisted table:', table); continue; }
+        let rowsArray = rows;
+        if (!Array.isArray(rows)) {
+          if (typeof rows === 'object' && rows !== null) {
+            rowsArray = Object.values(rows);
+            console.log('[Import] Converted object to array for table:', table, 'with', rowsArray.length, 'rows');
+          } else {
+            console.log('[Import] Skipping non-array table:', table);
+            continue;
+          }
+        }
+        for (const row of rowsArray) {
+          if (!row.id) continue;
+          const columns = Object.keys(row).filter(k => k !== undefined);
+          if (columns.length === 0) continue;
+          const placeholders = columns.map(() => '?').join(', ');
+          const sql = `INSERT OR REPLACE INTO ${table} (${columns.join(', ')}) VALUES (${placeholders})`;
+          const stmt = database.prepare(sql);
+          stmt.run(columns.map(c => row[c]));
+          stmt.free();
+          imported++;
+        }
+      }
+      persistDb(getDbPath());
+      return { success: true, imported };
+    },
+    _convertV2ToTableFormat(raw) {
+      if (!raw.companyProfiles && !raw.appCompany && !raw.appCustomers && !raw.companies) {
+        return null;
+      }
+      
+      const result = { companies: [], customers: [], items: [], vendors: [], invoices: [], invoice_lines: [] };
+      
+      if (raw.companyProfiles && Array.isArray(raw.companyProfiles)) {
+        result.companies = raw.companyProfiles.map(c => ({
+          id: c.id,
+          name: c.name,
+          gstin: c.gstin || null,
+          address: c.address || null,
+          address_line1: c.address || null,
+          address_line2: null,
+          phone: c.phone || null,
+          email: c.email || null,
+          city: c.city || null,
+          state: c.state || null,
+          pincode: c.pincode || null,
+        }));
+      }
+      
+if (raw.companies && typeof raw.companies === 'object') {
+        for (const [companyId, companyData] of Object.entries(raw.companies)) {
+          if (typeof companyData === 'object' && companyData !== null) {
+            const appCompany = companyData.appCompany || {};
+            result.companies.push({
+              id: companyId,
+              name: companyData.name || appCompany.name || '',
+              gstin: companyData.gstin || appCompany.gstin || null,
+              address: companyData.address || appCompany.address || null,
+              address_line1: companyData.address || appCompany.address || null,
+              address_line2: null,
+              city: companyData.city || appCompany.city || null,
+              state: companyData.state || appCompany.state || null,
+              pincode: companyData.pincode || appCompany.pincode || null,
+              phone: companyData.phone || appCompany.phone || null,
+              email: companyData.email || appCompany.email || null,
+            });
+            
+            if (Array.isArray(companyData.appCustomers)) {
+              companyData.appCustomers.forEach(c => {
+result.customers.push({
+                   id: c.id,
+                   name: c.name,
+                   email: c.email || null,
+                   phone: c.phone || null,
+                   address_line1: c.address || null,
+                   address_line2: null,
+                   city: c.city || null,
+                   state: c.state || null,
+                   pincode: c.pincode || null,
+                 });
+              });
+            }
+          }
+        }
+      }
+      
+      return result;
     },
   };
 

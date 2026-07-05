@@ -1,4 +1,5 @@
 import { createReportFilter, createGstr1Report, createLedgerReport, createProfitLossReport, createStockReport, createDaybookReport, createBalanceSheet } from '../domain/entities.js';
+import { getCompanyId } from '../domain/entities.js';
 
 export class ReportsService {
   constructor({ storage, commandBus, eventBus, logger, sharedState }) {
@@ -10,11 +11,18 @@ export class ReportsService {
     this.cache = new Map();
   }
 
+  companyId() {
+    return getCompanyId(this.sharedState);
+  }
+
   async getGstr1(params) {
     const filter = createReportFilter(params);
     this.logger.info('Generating GSTR-1', filter);
 
-    const result = await this.commandBus.invoke('invoice:getList', { ...filter, limit: 10000 });
+    const dateFrom = filter.dateFrom || '1970-01-01';
+    const dateTo = filter.dateTo || new Date().toISOString().split('T')[0];
+
+    const result = await this.commandBus.invoke('invoice:getList', { ...filter, companyId: this.companyId(), dateFrom, dateTo, limit: 10000 });
     const invoices = result.success ? result.data : [];
 
     const taxableSupplies = invoices.filter(i => i.status !== 'cancelled').reduce((s, i) => s + i.totalAmount, 0);
@@ -29,8 +37,8 @@ export class ReportsService {
     this.logger.info('Generating Ledger', filter);
 
     const [custResult, venResult] = await Promise.all([
-      this.commandBus.invoke('customer:getList', { limit: 10000 }),
-      this.commandBus.invoke('vendor:getList', { limit: 10000 }),
+      this.commandBus.invoke('customer:getList', { companyId: this.companyId(), limit: 10000 }),
+      this.commandBus.invoke('vendor:getList', { companyId: this.companyId(), limit: 10000 }),
     ]);
 
     const customers = custResult.success ? custResult.data : [];
@@ -43,9 +51,12 @@ export class ReportsService {
     const filter = createReportFilter(params);
     this.logger.info('Generating Profit & Loss', filter);
 
+    const dateFrom = filter.dateFrom || '1970-01-01';
+    const dateTo = filter.dateTo || new Date().toISOString().split('T')[0];
+
     const [invResult, purResult] = await Promise.all([
-      this.commandBus.invoke('invoice:getList', { ...filter, limit: 10000 }),
-      this.commandBus.invoke('purchase:getList', { ...filter, limit: 10000 }),
+      this.commandBus.invoke('invoice:getList', { ...filter, companyId: this.companyId(), dateFrom, dateTo, limit: 10000 }),
+      this.commandBus.invoke('purchase:getList', { ...filter, companyId: this.companyId(), dateFrom, dateTo, limit: 10000 }),
     ]);
 
     const revenue = (invResult.success ? invResult.data : []).reduce((s, i) => s + i.totalAmount, 0);
@@ -59,7 +70,7 @@ export class ReportsService {
     const filter = createReportFilter(params);
     this.logger.info('Generating Stock Report', filter);
 
-    const result = await this.commandBus.invoke('item:getList', { ...filter, limit: 10000 });
+    const result = await this.commandBus.invoke('item:getList', { companyId: this.companyId(), ...filter, limit: 10000 });
     const items = result.success ? result.data : [];
 
     return { success: true, data: items.map(item => createStockReport({ itemId: item.id, itemName: item.name, openingStock: item.openingStock || 0, purchases: 0, sales: 0, closingStock: item.openingStock || 0 })) };
@@ -69,9 +80,12 @@ export class ReportsService {
     const filter = createReportFilter(params);
     this.logger.info('Generating Daybook', filter);
 
+    const dateFrom = filter.dateFrom || '1970-01-01';
+    const dateTo = filter.dateTo || new Date().toISOString().split('T')[0];
+
     const [invResult, purResult] = await Promise.all([
-      this.commandBus.invoke('invoice:getList', { ...filter, limit: 10000 }),
-      this.commandBus.invoke('purchase:getList', { ...filter, limit: 10000 }),
+      this.commandBus.invoke('invoice:getList', { ...filter, companyId: this.companyId(), dateFrom, dateTo, limit: 10000 }),
+      this.commandBus.invoke('purchase:getList', { ...filter, companyId: this.companyId(), dateFrom, dateTo, limit: 10000 }),
     ]);
 
     const entries = [];
@@ -89,10 +103,13 @@ export class ReportsService {
     const filter = createReportFilter(params);
     this.logger.info('Generating Balance Sheet', filter);
 
+    const dateFrom = filter.dateFrom || '1970-01-01';
+    const dateTo = filter.dateTo || new Date().toISOString().split('T')[0];
+
     const [invResult, purResult, payResult] = await Promise.all([
-      this.commandBus.invoke('invoice:getList', { ...filter, limit: 10000 }),
-      this.commandBus.invoke('purchase:getList', { ...filter, limit: 10000 }),
-      this.commandBus.invoke('payment:getList', { ...filter, limit: 10000 }),
+      this.commandBus.invoke('invoice:getList', { ...filter, companyId: this.companyId(), dateFrom, dateTo, limit: 10000 }),
+      this.commandBus.invoke('purchase:getList', { ...filter, companyId: this.companyId(), dateFrom, dateTo, limit: 10000 }),
+      this.commandBus.invoke('payment:getList', { ...filter, companyId: this.companyId(), limit: 10000 }),
     ]);
 
     const totalRevenue = (invResult.success ? invResult.data : []).filter(i => i.status !== 'cancelled').reduce((s, i) => s + i.totalAmount, 0);

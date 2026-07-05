@@ -3,9 +3,9 @@ import { z } from 'zod';
 export const LineItemSchema = z.object({
   id: z.string().min(1),
   itemId: z.string().min(1),
-  itemName: z.string().optional(),
-  description: z.string().optional(),
-  hsnSac: z.string().optional(),
+  itemName: z.string().optional().nullable(),
+  description: z.string().optional().nullable(),
+  hsnSac: z.string().optional().nullable(),
   quantity: z.number().min(0.01),
   unit: z.string().default('Nos'),
   rate: z.number().min(0),
@@ -26,7 +26,7 @@ export const LineItemSchema = z.object({
 export const InvoiceSchema = z.object({
   id: z.string().min(1),
   invoiceNumber: z.string().min(1),
-  customerId: z.string().min(1),
+  customerId: z.string().optional(),
   customerName: z.string().optional(),
   customerState: z.string().optional(),
   companyId: z.string().optional(),
@@ -92,4 +92,8 @@ export function createLineItem(data) {
     taxAmount,
     total,
   });
+}
+
+export function getCompanyId(sharedState) {
+  return sharedState.getState().currentCompany?.id;
 }

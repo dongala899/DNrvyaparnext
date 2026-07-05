@@ -1,0 +1,12 @@
+UPDATE OR IGNORE customers SET company_id = (SELECT id FROM companies LIMIT 1) WHERE company_id IS NULL;
+UPDATE OR IGNORE vendors SET company_id = (SELECT id FROM companies LIMIT 1) WHERE company_id IS NULL;
+UPDATE OR IGNORE items SET company_id = (SELECT id FROM companies LIMIT 1) WHERE company_id IS NULL;
+UPDATE OR IGNORE payments SET company_id = (SELECT id FROM companies LIMIT 1) WHERE company_id IS NULL;
+UPDATE OR IGNORE vendor_payments SET company_id = (SELECT id FROM companies LIMIT 1) WHERE company_id IS NULL;
+UPDATE OR IGNORE purchase_orders SET company_id = (SELECT id FROM companies LIMIT 1) WHERE company_id IS NULL;
+UPDATE OR IGNORE po_lines SET company_id = (SELECT id FROM companies LIMIT 1) WHERE company_id IS NULL;
+UPDATE OR IGNORE grns SET company_id = (SELECT id FROM companies LIMIT 1) WHERE company_id IS NULL;
+UPDATE OR IGNORE grn_lines SET company_id = (SELECT id FROM companies LIMIT 1) WHERE company_id IS NULL;
+UPDATE OR IGNORE purchases SET company_id = (SELECT id FROM companies LIMIT 1) WHERE company_id IS NULL;
+UPDATE OR IGNORE purchase_lines SET company_id = (SELECT id FROM companies LIMIT 1) WHERE company_id IS NULL;
+UPDATE OR IGNORE customer_orders SET company_id = (SELECT id FROM companies LIMIT 1) WHERE company_id IS NULL;

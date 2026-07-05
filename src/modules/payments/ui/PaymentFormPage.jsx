@@ -5,6 +5,7 @@ export default function PaymentFormPage() {
   const [formData, setFormData] = useState({ invoiceId: '', customerId: '', amount: 0, paymentDate: new Date().toISOString().split('T')[0], paymentMode: 'cash', referenceNumber: '', notes: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -16,6 +17,17 @@ export default function PaymentFormPage() {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setFieldErrors({});
+    const errors = {};
+    if (!formData.invoiceId) errors.invoiceId = 'Invoice ID is required';
+    if (!formData.amount || formData.amount <= 0) errors.amount = 'Amount must be greater than 0';
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setLoading(false);
+      return;
+    }
+
     try {
       const commandBus = window.__shell?.commandBus;
       const result = await commandBus.invoke('payment:create', formData);
@@ -34,6 +46,7 @@ export default function PaymentFormPage() {
         <div className="form-group">
           <label htmlFor="invoiceId">Invoice ID *</label>
           <input type="text" id="invoiceId" name="invoiceId" value={formData.invoiceId} onChange={handleChange} required />
+          {fieldErrors.invoiceId && <div className="alert alert-error" style={{marginTop:'4px',padding:'6px 8px',fontSize:'0.85em'}}>{fieldErrors.invoiceId}</div>}
         </div>
 
         <div className="form-group">
@@ -44,6 +57,7 @@ export default function PaymentFormPage() {
         <div className="form-group">
           <label htmlFor="amount">Amount (₹) *</label>
           <input type="number" id="amount" name="amount" value={formData.amount} onChange={handleChange} min="0.01" step="0.01" required />
+          {fieldErrors.amount && <div className="alert alert-error" style={{marginTop:'4px',padding:'6px 8px',fontSize:'0.85em'}}>{fieldErrors.amount}</div>}
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--spacing-md)' }}>

@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
 export const ReportFilterSchema = z.object({
-  dateFrom: z.string().datetime(),
-  dateTo: z.string().datetime(),
+  dateFrom: z.string().optional(),
+  dateTo: z.string().optional(),
   companyId: z.string().optional(),
   customerId: z.string().optional(),
   vendorId: z.string().optional(),
@@ -72,3 +72,6 @@ export function createProfitLossReport(data) { return ProfitLossReportSchema.par
 export function createStockReport(data) { return StockReportSchema.parse(data); }
 export function createDaybookReport(data) { return DaybookReportSchema.parse(data); }
 export function createBalanceSheet(data) { return BalanceSheetSchema.parse(data); }
+export function getCompanyId(sharedState) {
+  return sharedState.getState().currentCompany?.id;
+}

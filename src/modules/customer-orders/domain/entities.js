@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const OrderLineSchema = z.object({
   id: z.string().min(1),
-  itemId: z.string().min(1),
+  itemId: z.string().optional(),
   itemName: z.string().optional(),
   description: z.string().optional(),
   quantity: z.number().min(0.01),
@@ -18,6 +18,7 @@ export const OrderLineSchema = z.object({
 
 export const CustomerOrderSchema = z.object({
   id: z.string().min(1),
+  companyId: z.string().optional(),
   orderNumber: z.string().min(1),
   customerId: z.string().min(1),
   customerName: z.string().optional(),
@@ -85,4 +86,8 @@ export function createCustomerOrder(data) {
     roundOff,
     totalAmount,
   });
+}
+
+export function getCompanyId(sharedState) {
+  return sharedState.getState().currentCompany?.id;
 }

@@ -8,6 +8,7 @@ export default function PurchaseFormPage() {
   const [formData, setFormData] = useState({ billNumber: '', vendorId: '', vendorName: '', date: new Date().toISOString().split('T')[0], dueDate: '', notes: '', status: 'draft', lines: [{ id: crypto.randomUUID(), itemId: '', itemName: '', quantity: 1, rate: 0, discount: 0, taxRate: 18, subtotal: 0, total: 0, inputTaxCredit: true }] });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => { if (isEdit) loadPurchase(); }, [id]);
@@ -50,6 +51,20 @@ export default function PurchaseFormPage() {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setFieldErrors({});
+    const errors = {};
+    if (!formData.billNumber) errors.billNumber = 'Bill number is required';
+    if (!formData.date) errors.date = 'Date is required';
+    if (!formData.vendorId) errors.vendorId = 'Vendor is required';
+    const validLines = formData.lines.filter(l => l.itemId);
+    if (validLines.length === 0) errors.lines = 'At least one line item with an item selection is required';
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setLoading(false);
+      return;
+    }
+
     try {
       const commandBus = window.__shell?.commandBus;
       const payload = { ...formData, lines: formData.lines.map(l => ({ ...l, subtotal: l.subtotal || 0, total: l.total || 0 })) };
@@ -71,8 +86,11 @@ export default function PurchaseFormPage() {
       <form onSubmit={handleSubmit}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--spacing-md)' }}>
           <div className="form-group"><label htmlFor="billNumber">Bill # *</label><input type="text" id="billNumber" name="billNumber" value={formData.billNumber} onChange={handleChange} required /></div>
+          {fieldErrors.billNumber && <div className="alert alert-error" style={{marginTop:'4px',padding:'6px 8px',fontSize:'0.85em'}}>{fieldErrors.billNumber}</div>}
           <div className="form-group"><label htmlFor="date">Date *</label><input type="date" id="date" name="date" value={formData.date} onChange={handleChange} required /></div>
+          {fieldErrors.date && <div className="alert alert-error" style={{marginTop:'4px',padding:'6px 8px',fontSize:'0.85em'}}>{fieldErrors.date}</div>}
           <div className="form-group"><label htmlFor="vendorId">Vendor ID *</label><input type="text" id="vendorId" name="vendorId" value={formData.vendorId} onChange={handleChange} required /></div>
+          {fieldErrors.vendorId && <div className="alert alert-error" style={{marginTop:'4px',padding:'6px 8px',fontSize:'0.85em'}}>{fieldErrors.vendorId}</div>}
         </div>
         <h4 style={{ marginTop: 'var(--spacing-lg)' }}>Line Items</h4>
         <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 'var(--spacing-md)' }}>
@@ -90,6 +108,7 @@ export default function PurchaseFormPage() {
           </tbody>
         </table>
         <button type="button" onClick={addLine} className="btn btn-secondary">+ Add Line</button>
+        {fieldErrors.lines && <div className="alert alert-error" style={{marginTop:'4px',padding:'6px 8px',fontSize:'0.85em'}}>{fieldErrors.lines}</div>}
         <div className="form-group"><label htmlFor="notes">Notes</label><textarea id="notes" name="notes" value={formData.notes} onChange={handleChange} rows="2" /></div>
         <div style={{ display: 'flex', justifyContent: 'flex-end', border: '1px solid var(--color-border)', padding: 'var(--spacing-md)', marginTop: 'var(--spacing-md)' }}><div style={{ textAlign: 'right' }}><p>Subtotal: ₹{totals.subtotal.toFixed(2)}</p><p>Tax: ₹{totals.taxAmount.toFixed(2)}</p><p style={{ fontSize: '1.2em' }}><strong>Total: ₹{totals.totalAmount.toFixed(2)}</strong></p></div></div>
         <div style={{ display: 'flex', gap: 'var(--spacing-md)', marginTop: 'var(--spacing-lg)' }}><button type="submit" className="btn btn-primary" disabled={loading}>{loading ? 'Saving...' : 'Save'}</button><Link to="/purchases" className="btn btn-secondary">Cancel</Link></div>

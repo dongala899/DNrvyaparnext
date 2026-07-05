@@ -174,7 +174,7 @@ function drawFooter(doc, docData) {
 
   doc.fontSize(9).font('Helvetica-Bold').fillColor('#000000');
   doc.text('Terms & Conditions:', 50, footerY + 10);
-  doc.font('Helventica').fontSize(8);
+  doc.font('Helvetica').fontSize(8);
   doc.text('1. Goods once sold will not be taken back.', 50, footerY + 25);
   doc.text('2. Interest @18% p.a. will be charged on overdue payments.', 50, footerY + 37);
   doc.text('3. Subject to local jurisdiction.', 50, footerY + 49);

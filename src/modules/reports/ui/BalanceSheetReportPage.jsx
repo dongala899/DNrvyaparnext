@@ -11,7 +11,7 @@ export default function BalanceSheetReportPage() {
     try {
       const bus = window.__shell?.commandBus;
       if (!bus) throw new Error('Command bus not available');
-      const result = await bus.invoke('report:getBalanceSheet', { dateFrom: '2020-01-01T00:00:00.000Z', dateTo: new Date(asOf).toISOString() });
+      const result = await bus.invoke('report:getBalanceSheet', { dateFrom: '1970-01-01', dateTo: asOf });
       if (result.success) setData(result.data);
       else alert('Error: ' + result.error);
     } catch (e) {

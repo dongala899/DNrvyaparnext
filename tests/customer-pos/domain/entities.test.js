@@ -4,9 +4,10 @@ import { CartLineSchema, PosStateSchema, createCartLine, createPosState } from '
 describe('Customer POS Domain Entities', () => {
   describe('CartLineSchema', () => {
     it('should validate a valid cart line', () => {
-      const line = createCartLine({ id: '1', itemId: 'item-1', quantity: 2, rate: 100, discount: 10, gstRate: 18, subtotal: 200, total: 244 });
+      const line = createCartLine({ id: '1', itemId: 'item-1', quantity: 2, rate: 100, discount: 10, gstRate: 18 });
       expect(line.quantity).toBe(2);
-      expect(line.total).toBe(244);
+      expect(line.subtotal).toBe(200);
+      expect(line.total).toBe(226);
     });
   });
 

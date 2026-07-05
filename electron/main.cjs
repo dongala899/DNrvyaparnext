@@ -312,7 +312,7 @@ function registerAllIpcHandlers() {
     }
   });
 
-  ipcMain.handle('storage:migrationRun', async (event, payload) => {
+  ipcMain.handle('backup:runMigration', async (event, payload) => {
     try {
       const result = await storage.migration.runOldApp(payload.sourcePath);
       return result;
@@ -324,7 +324,7 @@ function registerAllIpcHandlers() {
   ipcMain.handle('dialog:openFile', async (event, options) => {
     const win = BrowserWindow.getFocusedWindow();
     if (!win) return { success: false, error: 'No focused window' };
-    const result = await win.webContents.showOpenDialog(win, {
+    const result = await dialog.showOpenDialog(win, {
       properties: ['openFile'],
       filters: options?.filters || [],
       defaultPath: options?.defaultPath,
@@ -335,7 +335,7 @@ function registerAllIpcHandlers() {
   ipcMain.handle('dialog:saveFile', async (event, options) => {
     const win = BrowserWindow.getFocusedWindow();
     if (!win) return { success: false, error: 'No focused window' };
-    const result = await win.webContents.showSaveDialog(win, {
+    const result = await dialog.showSaveDialog(win, {
       filters: options?.filters || [],
       defaultPath: options?.defaultPath,
     });
@@ -345,7 +345,7 @@ function registerAllIpcHandlers() {
   ipcMain.handle('dialog:messageBox', async (event, options) => {
     const win = BrowserWindow.getFocusedWindow();
     if (!win) return { success: false, error: 'No focused window' };
-    const result = await win.webContents.showMessageBox(win, {
+    const result = await dialog.showMessageBox(win, {
       type: options?.type || 'info',
       title: options?.title || 'DNR Vyapar',
       message: options?.message || '',
